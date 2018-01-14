@@ -11,11 +11,19 @@
 |
 */
 
-Route::any('api/{m}/{a}',function($m,$a){
+Route::any('/api/{m}/{a}',function($m,$a){
 	$ns = "App\Http\Controllers\\${m}Controller";
-	return (new $ns)->$a();
-})
-
-Route::get('/', function () {
-    return view('welcome');
+	// dd($ns);
+	return (new $ns($m))->$a();
 });
+
+Route::get('admin/{a}', function ($page) {
+    return view("admin.$page");
+});
+Route::get('user/{a}', function ($page) {
+    return view("user.$page");
+});
+Route::get('/', function () {
+    return view("public.home");
+});
+

@@ -1,0 +1,6 @@
+.home-search-bar{
+	background-image: url('/storage/img/home/home-search-bar-bg.jpg'); 
+	height: 500px;
+	-webkit-background-size: 100% auto ;
+	background-size: 100% auto ;
+}
