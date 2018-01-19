@@ -1,6 +1,33 @@
+[v-cloak]{
+   display: none;
+}
+
 .home-search-bar{
-	background-image: url('/storage/img/home/home-search-bar-bg.jpg'); 
-	height: 500px;
+	/*background-image: url('/storage/img/home/home-search-bar-bg.jpg'); */
+	/*height: 500px;*/
 	-webkit-background-size: 100% auto ;
 	background-size: 100% auto ;
 }
+
+
+/**
+ *   sell house page.
+ */
+
+#sell-house-form .am-hide-sm input{
+   border:none;
+   box-shadow: none;
+}
+#sell-house-form .am-hide-sm dl *{
+   height: 100%;
+   max-height: 100%;
+}
+
+/**
+ *  user page
+ */
+#user-side-menu-bar li:not(.am-active) a:hover{
+   background: rgba(0,0,0,0.2);
+}
+
+

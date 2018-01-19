@@ -12,18 +12,18 @@
 */
 
 Route::any('/api/{m}/{a}',function($m,$a){
-	$ns = "App\Http\Controllers\\${m}Controller";
-	// dd($ns);
-	return (new $ns($m))->$a();
+   $ns = "App\Http\Controllers\\${m}Controller";
+   // dd($ns);
+   return (new $ns($m))->$a();
 });
 
 Route::get('admin/{a}', function ($page) {
-    return view("admin.$page");
+  return view("admin.$page");
 });
 Route::get('user/{a}', function ($page) {
-    return view("user.$page");
+  return view("user.$page");
 });
 Route::get('/', function () {
-    return view("public.home");
+  return view("public.home");
 });
 

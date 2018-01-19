@@ -11,8 +11,5 @@ class House extends Model
 
 	public $table = 'houses';
 
-	
-
-	
 
 }

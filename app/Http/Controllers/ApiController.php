@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Contracts\Session;
+
 
 use Validator;
 
@@ -15,16 +17,6 @@ class ApiController extends Controller
     private $error;
 
 
-    public function __construct($model)
-    {
-
-    	$model = "\App\\${model}";
-
-
-    	$this->model = new $model;
-    }
-
-
     public function add()
     {
 
@@ -34,17 +26,9 @@ class ApiController extends Controller
         $r = $this->model->create(request()->toArray());
 
 
-    	return $r ? suc($this->model->id) :err('error');    	
+        return $r ? suc($this->model->id) :err('error');
     }
 
-
-    public function change()
-    {
-
-    	$r = $this->model->where(request('id'))->update(request()->toArray());
-
-    	return $r ? suc() : err();
-    }
 
 
     public function remove()
@@ -63,23 +47,21 @@ class ApiController extends Controller
 
 
     public function validator($rules,$data = null)
-    {   
+    {
 
         // get data
-        $data = $this->filterData($data ?: request()->toArray());
-
+        if(!$data){
+            $data = $this->filterData(request()->toArray());
+        }
 
         $v = Validator::make($data,$rules);
 
         if($v->fails())
         {
             $this->error = $v->errors();
-            // dd($this->error);
             return false;
         }
         return $data;
-
-    	// return request()->validate($rules);
     }
 
 
@@ -105,5 +87,23 @@ class ApiController extends Controller
                 unset($data[$key]);
         }
         return $data;
+    }
+
+    public function resultReturn($r,$type=null)
+    {
+        return $r !== false ? suc($r) : err('error');
+    }
+
+    public function changeColumn($id,$who,$to)
+    {
+      return $this->model->where('id',$id)->update([$who=>$to]);
+
+    }
+
+    protected function saveText()
+    {
+      $mText =  '\App\Http\Controllers\MessageTextController';
+
+      return (new $mText)->saveMessageContent();
     }
 }

@@ -22,18 +22,14 @@
 		{
 			add()
 			{
-				
 				// load start;
 				$.AMUI.progress.start();
-
-
-				// response 
+				// response
 				$.post('/api/house/createTable',this.row).then(res=>{
 					$.AMUI.progress.done();
 					this.alert();
 					this.row = {};
 				})
-
 			},
 			alert(msg)
 			{

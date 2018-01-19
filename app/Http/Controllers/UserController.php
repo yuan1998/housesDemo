@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use \App\User;
 
 class UserController extends ApiController
 {
-	// signup rules 
+	// signup rules
 	private $signupRules = [
 		'username'=>'required|between:6,32|unique:users',
 		'password'=>'required|min:6',
@@ -17,9 +18,15 @@ class UserController extends ApiController
 
 	private $signupColumns = ['username','password','email','tel'];
 
-	// login 
+	public function __construct(){
+		// $model = "\App\user";
+
+    	// $this->model = new $model;
+      $this->model = new User;
+   }
+	// login
 	public function login()
-	{	
+	{
 		/*
 			if is login.
 			return error msg.
@@ -32,12 +39,14 @@ class UserController extends ApiController
 			if pass , data save to session.
 			else return false.
 		 */
+
 		if(!($user = $this->loginValidate()))
 			return err('用户名或密码有误');
 
+
 		session(['user'=>$user]);
 		return suc();
-	}	
+	}
 
 	// login validate
 	private function loginValidate()
@@ -69,7 +78,7 @@ class UserController extends ApiController
 		return $user;
 	}
 
-	//sigin 	
+	//sigin
 	public function signup()
 	{
 
@@ -78,14 +87,14 @@ class UserController extends ApiController
 		if( !$data = $this->signupValidate())
 			return $this->getError();
 
-		// dd($data);
+
 
 		$r = $this->model->create($data);
 
 		return $r ? suc($r->id) : err('error');
 	}
 
-	// signup validate 
+	// signup validate
 	private function signupValidate()
 	{
 		// get need data
@@ -97,7 +106,7 @@ class UserController extends ApiController
 		/*
 			judgment validate result.
 			if fail return false
-		 */ 
+		 */
 		if(!$data)
 			return false;
 
@@ -112,7 +121,7 @@ class UserController extends ApiController
 
 		/*
 			all validated pass.
-			hash password. 
+			hash password.
 			return data.
 		 */
 		$data['password'] = Hash::make($data['password']);
@@ -126,20 +135,20 @@ class UserController extends ApiController
 	public function logout()
 	{
 		// session in remove user
-		
+
 		session()->forget('user');
 
 		return suc();
 	}
 
-	// is_login 
+	// is_login
 	public function is_login()
 	{
 		// judgment session user exists;
 		if(session()->has('user')){
 			/*
 				session user exists;
-				judgment request(want) 
+				judgment request(want)
 				if exists return want to data
 				else return true
 			 */
@@ -147,7 +156,16 @@ class UserController extends ApiController
 			return $want ? suc(session('user')->all($want)) : suc();
 		}
 		// unlogin return false
-		return err();
+		return err(null,200);
 	}
+
+	public function getUserData(){
+		if(!session('user'))
+			return err('not user');
+		$r = $this->model->where('id',session('user')->id)->first();
+		return $this->resultReturn($r);
+	}
+
+
 
 }

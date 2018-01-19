@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="csrf-token" content="{{ csrf_token() }}">
 	<title>我要买房</title>
-	<link rel="stylesheet" type="text/css" href="/bower_components/amazeui/dist/css/amazeui.min.css">	
+	<link rel="stylesheet" type="text/css" href="/bower_components/amazeui/dist/css/amazeui.min.css">
 	<link rel="stylesheet" type="text/css" href="/css/user/maifang.css">
 </head>
 <body>
@@ -45,12 +45,7 @@
 			</div>
 			<div class="top">
 				<div class="am-container">
-					<div class="title am-text-center am-g">
-						<div class="am-u-xs-12">发布出售房源</div>
-					</div>
-					<div class="subtitle am-text-center am-g">
-						<h3 class='am-link-muted'>大数据专业估价·每天超过30000次估价请求量</h3>
-					</div>
+
 				</div>
 			</div>
 		</div>
@@ -98,7 +93,7 @@
 							<div class="am-u-sm-6 am-u-end">
 								<a href="">不太清楚如何定价? 先估个价</a>
 							</div>
-							
+
 						</dd>
 					</dl>
 					<dl class='compact font-0 am-padding-vertical'>
@@ -118,7 +113,7 @@
 					</div>
 				</form>
 			</div>
-			<button type="button" id='alertBtn' data-am-modal="{target: '#my-alert'}" style="display:none;"></button>
+
 
 			<div class="sibeBar am-u-lg-4 am-u-sm-12 ">
 				<blockquote class="">
@@ -137,8 +132,8 @@
 		    </div>
 		  </div>
 		</div>
-		
-	</div>	
+
+	</div>
 	<script type="text/javascript" src="/bower_components/jquery/dist/jquery.min.js"></script>
 	<script type="text/javascript" src="/bower_components/amazeui/dist/js/amazeui.min.js"></script>
 	<script type="text/javascript" src="/node_modules/vue/dist/vue.js"></script>

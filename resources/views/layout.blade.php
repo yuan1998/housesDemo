@@ -26,8 +26,9 @@
 								<li class=""><a href="">哩个</a></li>
 							</ul>
 							<div class="am-topbar-right">
+
 								<ul class="am-nav am-nav-pills am-topbar-nav">
-									<li class="am-dropdown" data-am-dropdown>
+									<li class="am-dropdown" v-if="user === null" data-am-dropdown>
 										<a href="#" class="am-dropdown-toggle">哩个<i class="am-icon-caret-down"></i></a>
 										<ul class="am-dropdown-content">
 											<li><a href="">首页</a></li>
@@ -37,6 +38,7 @@
 											<li><a href="">登出</a></li>
 										</ul>
 									</li>
+									<li v-else><a href="#">LOGIN</a></li>
 								</ul>
 							</div>
 						</div>
@@ -44,7 +46,7 @@
 				</div>
 			</div>
 		</div>
-		router-view	
+		router-view
 	</div>
 	<script type="text/javascript" src="/bower_components/jquery/dist/jquery.min.js"></script>
 	<script type="text/javascript" src="/bower_components/amazeui/dist/js/amazeui.min.js"></script>
