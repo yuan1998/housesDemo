@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use \App\SessionY;
 
 class createToken
 {
@@ -30,6 +29,7 @@ class createToken
             header("$session_name: $token");
 
         }else $SY->findSession();
+
         $SY->addLog();
 
         return $next($request);

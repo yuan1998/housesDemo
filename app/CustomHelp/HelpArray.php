@@ -22,7 +22,7 @@ class HelpArray
    public function _get($key)
    {
 
-      return $this->$key;
+      return array_get($this,$key);
 
    }
 
@@ -52,6 +52,9 @@ class HelpArray
    {
 
       $a = $this->toArray();
+
+      if(!$a)
+         return null;
 
       if(is_array($arr)){
          $r = [];

@@ -23,7 +23,10 @@ function sessiony()
 {
    $SY = newSession();
    $arg = func_get_args();
+
    $SY = $SY->user ?: $SY;
+
+
    if(!$arg){
       return $SY->get_data();
    }elseif(count($arg)===1 && is_string($arg[0])){
@@ -32,7 +35,7 @@ function sessiony()
       foreach($arg[0] as $key=>$value){
          $SY->set_data($key,$value);
       }
-   }else $arg = false;
+   }
 
 }
 
@@ -43,15 +46,17 @@ function _getDate($day = null)
    return date('Y-m-d H:i:s',time() + $dayTime);
 }
 
+/**
+ * generate x day to second
+ *
+ * @Yuan1998
+ * @DateTime 2018-01-23T15:20:15+0800
+ * @param    integer                  $day [description]
+ * @return   [type]                        [description]
+ */
 function day($day= 1)
 {
-return $day * 24 * 60 *60;
-}
-
-function saveUser($id)
-{
-   $SY = newSession();
-   $SY->saveUserId()->finUser();
+   return $day * 24 * 60 *60;
 }
 
 function generateLog()

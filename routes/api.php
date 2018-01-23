@@ -18,11 +18,17 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 
-Route::any('/yo',function(){
-   $a = request('a');
-   $r = sessiony('user');
-   // dd(sessiony('user')->toArray());
-   // sessiony()->forget('a');
-   return $r->toArray();
-   return '1';
+// Route::any('/yo',function(){
+//    $a = request('a');
+//    $r = sessiony('user');
+//    // dd(sessiony('user')->toArray());
+//    // sessiony()->forget('a');
+//    return $r->toArray();
+//    return '1';
+// });
+
+Route::any('/{m}/{a}',function($m,$a){
+   $ns = "App\Http\Controllers\\${m}Controller";
+
+   return (new $ns($m))->$a();
 });
