@@ -308,7 +308,8 @@
 			},
 			changeStatus(id,e){
 				console.log(e.target.value);
-			}
+			},
+
 		}
 	};
 
@@ -349,10 +350,10 @@
 											<dt class="am-text-middle am-u-md-3">房屋地址</dt>
 											<dd class="am-u-md-9 am-text-middle">
 												<div class="am-u-md-3">
-													<input placeholder="楼栋号" class="am-form-field am-u-sm-6 am-text-right" type="text" v-model="row.building">
+													<input placeholder="楼栋号" class="am-form-field am-u-sm-6 am-text-right" type="text" v-model="row.building_number">
 												</div>
 												<div class="am-u-md-3 am-u-md-offset-1">
-													<input placeholder="单元号" class="am-form-field am-u-sm-6 am-text-right"  type="text" v-model="row.unit">
+													<input placeholder="单元号" class="am-form-field am-u-sm-6 am-text-right"  type="text" v-model="row.unit_number">
 												</div>
 												<div class="am-u-md-3 am-u-md-offset-1 am-u-end">
 													<input placeholder="门牌号" class="am-form-field am-u-sm-6 am-text-right" type="text" v-model="row.house_number">
@@ -393,11 +394,11 @@
 										</div>
 										<div class="am-form-group">
 											<label class="">楼栋号</label>
-											<input placeholder="楼栋号" class="am-form-field" type="text" v-model="row.building">
+											<input placeholder="楼栋号" class="am-form-field" type="text" v-model="row.building_number">
 										</div>
 										<div class="am-form-group">
 											<label class="">单元号</label>
-											<input placeholder="单元号" class="am-form-field" type="text" v-model="row.unit">
+											<input placeholder="单元号" class="am-form-field" type="text" v-model="row.unit_number">
 										</div>
 										<div class="am-form-group">
 											<label class="">门牌号</label>
@@ -444,7 +445,7 @@
 				bus.$emit('progress','start');
 				// response
 				console.log(this.row);
-				$.post('/api/house/createTable',this.row).then(res=>{
+				$.post('/api/commissioned/createCommissioned',this.row).then(res=>{
 					bus.$emit('progress','done');
 					bus.$emit('alert',{'title':'添加成功～','content':'请耐心等待审核.'});
 					this.row = {};
@@ -576,27 +577,6 @@
 													<router-link  activeClass="am-active" tag="li" to="/user/info" exact>
 														<a >我的资料</a>
 													</router-link>
-													<li>
-														<a data-am-collapse="{parent:'#user-sibe-nav',target: '#user-message-collpase'}">
-															消息中心
-															<i class="am-icon-angle-right am-fr am-margin-right"></i>
-															<span v-show="webMessage+userMessage >0" class="am-badge am-badge-default am-margin-right">{{webMessage+userMessage}}</span>
-														</a>
-														<ul class="am-nav am-collapse admin-sidebar-sub" id="user-message-collpase">
-															<router-link  activeClass="am-active" tag="li" to="/user/webMessage" exact>
-																<a >
-																站内消息
-																	<span v-show="webMessage >0" class="am-badge am-badge-default am-fr am-margin-right am-text-middle">{{webMessage}}</span>
-																</a>
-															</router-link>
-															<router-link  activeClass="am-active" tag="li" to="/user/userMessage" exact>
-																<a >
-																	私信
-																<span v-show="userMessage >0" class="am-badge am-badge-default am-fr am-margin-right am-text-middle">{{userMessage}}</span>
-																</a>
-															</router-link>
-														</ul>
-													</li>
 													<router-link activeClass="am-active" tag="li" to="/user/commissioned" exact>
 														 <a >我的委托</a>
 													</router-link>
@@ -606,7 +586,6 @@
 												</ul>
 										</div>
 									</div>
-
 								</div>
 								<div class="am-sm-12 am-u-md-9">
 									<router-view></router-view>
@@ -618,10 +597,11 @@
 					<a href="#user-side-menu-bar" data-am-offcanvas class="am-icon-btn am-icon-bars"></a>
 				</div>
 				<div id="user-side-menu-bar" class="am-offcanvas">
-					<div class="am-offcanvas-bar">
+					<div class="am-offcanvas-bar" style="background: #fff;">
 						<div class="am-offcanvas-content">
 							<div class="am-g am-g-collapse">
 								<ul class="am-nav">
+									<li class="am-nav-header">导航</li>
 									<router-link tag="li" to="/">
 										<a><i class="am-icon-home"></i>首页</a>
 									</router-link>
@@ -631,31 +611,10 @@
 									<router-link tag="li" to="/">
 										<a ><i class="am-icon-money"></i>我要卖房</a>
 									</router-link>
-									<hr>
+									<li class="am-nav-header">用户</li>
 									<router-link @click.native="sideBarHide" activeClass="am-active" tag="li" to="/user/info" exact>
 										<a><i class="am-icon-user"></i>我的资料 </a>
 									</router-link>
-									<li activeClass="am-active">
-										 <a data-am-collapse="{target:'#user-side-bar-message'}">
-										 	<i class="am-icon-envelope-o"></i>
-										 	消息中心
-											<span v-show="webMessage+userMessage >0" class="am-badge am-badge-success am-fr am-margin-right am-text-middle">{{webMessage+userMessage}}</span>
-										 </a>
-										 <ul class="am-nav am-collapse" id="user-side-bar-message">
-										 	<router-link @click.native="sideBarHide" activeClass="am-active" tag="li" to="/user/webMessage" exact>
-												<a>
-													站内消息
-													<span v-show="webMessage > 0" class="am-badge am-badge-success am-fr am-margin-right am-text-middle">{{webMessage}}</span>
-												</a>
-											</router-link>
-										 	<router-link @click.native="sideBarHide" activeClass="am-active" tag="li" to="/user/userMessage" exact>
-												<a>
-													私信
-													<span v-show="userMessage >0" class="am-badge am-badge-success am-fr am-margin-right am-text-middle">{{userMessage}}</span>
-												</a>
-											</router-link>
-										 </ul>
-									</li>
 									<router-link @click.native="sideBarHide" activeClass="am-active" tag="li" to="/user/commissioned" exact>
 										 <a ><i class="am-icon-bell-o"></i>我的委托</a>
 									</router-link>
@@ -674,26 +633,14 @@
 		},
 		methods:{
 			init(){
-				this.getUnreadMessageCount();
 			},
  			sideBarHide(){
  				$('#user-side-menu-bar').offCanvas('close');
- 			},
- 			getUnreadMessageCount(){
- 				$.post('/api/adminMessage/getUnreadCount').then(res=>{
- 					this.webMessage = res.data;
- 				})
-
- 				$.post('/api/envelope/getUnreadCount').then(res=>{
- 					this.userMessage = res.data;
- 				})
  			},
 		},
 		data:function(){
 			return{
 				activeIs:'info',
-				userMessage:0,
-				webMessage:0,
 			}
 		}
 	}
@@ -812,8 +759,16 @@
  			getUserMessage(){
  				$.post('/api/envelope/getUserMessage').then(res=>{
  					this.uMessage = res.data;
+ 					this.haveRead(this.uMessage);
  				})
- 			}
+ 			},
+ 			haveRead(arr){
+ 				for(let item of arr){
+ 					if(item.status === 'unread'){
+ 						$.post('/api/envelope/envelopeRead',{id:item.id})
+ 					}
+ 				}
+ 			},
  		},
  		data:function(){
  			return {
@@ -841,7 +796,7 @@
 							没有消息。。。
 						</div>
 						<div v-else>
-							<div class="user-message-item am-panel am-panel-default" v-for="item in wMessage">
+							<div class="user-message-item am-panel"  v-for="item in wMessage" :class="[item.status === 'read' ?'am-panel-default': 'am-panel-primary']">
 								<div class="am-panel-bd">
 									<dl>
 										<dt>
@@ -869,8 +824,16 @@
  			getWebMessage(){
  				$.post('/api/adminMessage/userGetMessage').then(res=>{
  					this.wMessage = res.data;
+ 					this.haveRead(this.wMessage);
  				})
- 			}
+ 			},
+ 			haveRead(arr){
+ 				for(let item of arr){
+ 					if(!item.status){
+ 						$.post('/api/adminMessageStatus/userRead',{id:item.id})
+ 					}
+ 				}
+ 			},
  		},
  		data:function(){
  			return {
@@ -913,6 +876,115 @@
 
  		}
  	}
+
+	const messageComponent =
+	{
+		template:
+		`
+			<div class="content">
+				<div class="am-g">
+					<div class="am-container">
+							<div class="">
+								<div class="am-u-md-3 am-hide-sm">
+									<div class="am-panel am-panel-default">
+										<div class="am-panel-bd">
+											<ul class="am-nav admin-sidebar-list" id="user-sibe-nav">
+												<router-link  activeClass="am-active" tag="li" to="/message/webMessage" exact>
+													<a>
+													站内消息
+														<span v-show="webMessage >0" class="am-badge am-badge-default am-fr am-margin-right am-text-middle">{{webMessage}}</span>
+													</a>
+												</router-link>
+												<router-link  activeClass="am-active" tag="li" to="/message/userMessage" exact>
+													<a>
+														私信
+													<span v-show="userMessage >0" class="am-badge am-badge-default am-fr am-margin-right am-text-middle">{{userMessage}}</span>
+													</a>
+												</router-link>
+											</ul>
+										</div>
+									</div>
+								</div>
+								<div class="am-sm-12 am-u-md-9">
+									<router-view></router-view>
+								</div>
+							</div>
+					</div>
+				</div>
+				<div class="user-menu-btn am-show-sm" style="position:fixed;bottom: 50px;right: 25px;">
+					<a href="#user-side-menu-bar" data-am-offcanvas class="am-icon-btn am-icon-bars"></a>
+				</div>
+				<div id="user-side-menu-bar" class="am-offcanvas">
+					<div class="am-offcanvas-bar" style="background: #fff;">
+						<div class="am-offcanvas-content">
+							<div class="am-g am-g-collapse">
+								<ul class="am-nav">
+									<li class="am-nav-header">导航</li>
+									<router-link tag="li" to="/">
+										<a><i class="am-icon-home"></i>首页</a>
+									</router-link>
+									<router-link tag="li" to="/">
+										<a><i class="am-icon-building-o"></i>看房</a>
+									</router-link>
+									<router-link tag="li" to="/">
+										<a ><i class="am-icon-money"></i>我要卖房</a>
+									</router-link>
+									<li class="am-nav-header">消息</li>
+								 	<router-link @click.native="sideBarHide" activeClass="am-active" tag="li" to="/message/webMessage" exact>
+										<a>站内消息
+											<span v-show="webMessage > 0" class="am-badge am-badge-success am-fr am-margin-right am-text-middle">{{webMessage}}</span>
+										</a>
+									</router-link>
+								 	<router-link @click.native="sideBarHide" activeClass="am-active" tag="li" to="/message/userMessage" exact>
+										<a>私信
+											<span v-show="userMessage >0" class="am-badge am-badge-success am-fr am-margin-right am-text-middle">{{userMessage}}</span>
+										</a>
+									</router-link>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		`,
+		mounted:function(){
+			console.log('now is message page');
+			this.init();
+		},
+		methods:{
+			init(){
+				this.getUnreadCount();
+			},
+			getUnreadCount(){
+				$.post('/api/adminMessage/getUnreadCount').then(res=>{
+ 					this.webMessage = res.data;
+ 				})
+
+ 				$.post('/api/envelope/getUnreadCount').then(res=>{
+ 					this.userMessage = res.data;
+ 				})
+			}
+		},
+		data:function(){
+			return {
+				userMessage:0,
+				webMessage:0,
+			}
+		}
+	}
+
+/**
+ *  message dafault page component
+ */
+const messageDefaultComponent = {
+	template:
+	`
+		<h1>请选择查看消息类型</h1>
+	`,
+	mounted:function(){
+		console.log('now page is defaule page');
+	}
+}
 
 /**
  * vue router control
@@ -969,14 +1041,7 @@
 					path:'info',
 					component:userInfoComponent,
 				},
-				{
-					path:'webMessage',
-					component:webMessageComponent,
-				},
-				{
-					path:'userMessage',
-					component:userMessageComponent,
-				},
+
 				{
 					path:'commissioned',
 					component:userCommissionedComponent,
@@ -986,7 +1051,26 @@
 					component:userTransactionLogComponent,
 				}
 			]
-		}
+		},
+		{
+			path:'/message',
+			component:messageComponent,
+			meta:{title:'消息'},
+			children:[
+				{
+					path:'webMessage',
+					component:webMessageComponent,
+				},
+				{
+					path:'userMessage',
+					component:userMessageComponent,
+				},
+				{
+					path:'',
+					component:messageDefaultComponent,
+				}
+			]
+		},
 	];
 
 
@@ -1022,6 +1106,8 @@
 			user:null,
 			alertEl:document.querySelector('#alertBtn'),
 			msg:{'title':'添加成功～','content':'请耐心等待审核'},
+			userMessage:0,
+			webMessage:0,
 		},
 		mounted:function()
 		{
@@ -1029,8 +1115,7 @@
 			/**
 			 *  judgment user is not it login
 			 */
-			this.getLoggingStatus();
-
+			 this.init();
 			/*
 			 * monitor user login
 			 */
@@ -1051,9 +1136,13 @@
 			bus.$on('progress',type=>{
 				this.progress(type);
 			})
+
 		},
 		methods:
 		{
+			init(){
+				this.getLoggingStatus();
+			},
 			getLoggingStatus()
 			{
 				$.post('/api/user/is_login',{want:['username','email','tel','id','permission']})
@@ -1061,12 +1150,16 @@
 						console.log(res);
 						if(res.success){
 							this.user = res.data[0];
+							this.getUnreadMessageCount();
 						}
 					})
 			},
-			downEvent()
+			downOpenEvent($el)
 			{
-				$('.userBarDown').dropdown('toggle');
+				$($el).dropdown('open');
+			},
+			downCloseEvent($el){
+				$($el).dropdown('close');
 			},
 			logoutEvent()
 			{
@@ -1097,7 +1190,16 @@
 					default:
 						break;
 				}
-			}
+			},
+			getUnreadMessageCount(){
+ 				$.post('/api/adminMessage/getUnreadCount').then(res=>{
+ 					this.webMessage = res.data;
+ 				})
+
+ 				$.post('/api/envelope/getUnreadCount').then(res=>{
+ 					this.userMessage = res.data;
+ 				})
+ 			},
 		},
 	}).$mount('#appHome');
 

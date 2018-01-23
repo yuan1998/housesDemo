@@ -43,8 +43,7 @@ class UserController extends ApiController
 		if(!($user = $this->loginValidate()))
 			return err('用户名或密码有误');
 
-
-		session(['user'=>$user]);
+		sessiony()->saveUserId($user->id);
 		return suc();
 	}
 
@@ -92,6 +91,7 @@ class UserController extends ApiController
 		$r = $this->model->create($data);
 
 		return $r ? suc($r->id) : err('error');
+
 	}
 
 	// signup validate
@@ -136,7 +136,7 @@ class UserController extends ApiController
 	{
 		// session in remove user
 
-		session()->forget('user');
+		sessiony()->forget('user');
 
 		return suc();
 	}
@@ -145,14 +145,16 @@ class UserController extends ApiController
 	public function is_login()
 	{
 		// judgment session user exists;
-		if(session()->has('user')){
+		if(sessiony('user')){
 			/*
 				session user exists;
 				judgment request(want)
 				if exists return want to data
 				else return true
 			 */
+
 			$want = request('want');
+
 			return $want ? suc(session('user')->all($want)) : suc();
 		}
 		// unlogin return false

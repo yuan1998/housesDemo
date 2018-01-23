@@ -9,6 +9,22 @@
 	background-size: 100% auto ;
 }
 
+/**
+ *  home page
+ */
+
+.mark{
+   position:relative;
+}
+.mark sup{
+   position:absolute;
+   top: 10px;
+   border-radius: 50%;
+   width: 6px;
+   height: 6px;
+   background: red;
+}
+
 
 /**
  *   sell house page.
@@ -26,8 +42,14 @@
 /**
  *  user page
  */
+
 #user-side-menu-bar li:not(.am-active) a:hover{
-   background: rgba(0,0,0,0.2);
+   /*background: rgba(0,0,0,0.2);*/
 }
+
+#user-side-menu-bar li:not(.am-active) a{
+   color:#0e90d2;
+}
+
 
 

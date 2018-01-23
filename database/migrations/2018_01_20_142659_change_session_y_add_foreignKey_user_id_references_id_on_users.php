@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class ChangeAdminMessageStatusAddForeignKeyUserIdRefUsersOnIdAndAdminMessageIdRefAdminMessageOnId extends Migration
+class ChangeSessionYAddForeignKeyUserIdReferencesIdOnUsers extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,7 @@ class ChangeAdminMessageStatusAddForeignKeyUserIdRefUsersOnIdAndAdminMessageIdRe
      */
     public function up()
     {
-        Schema::table('adminMessageStatus', function (Blueprint $table) {
-            $table->foreign('admin_message_id')->references('id')->on('admin_messages');
+        Schema::table('session_y', function (Blueprint $table) {
             $table->foreign('user_id')->references('id')->on('users');
         });
     }
@@ -26,9 +25,10 @@ class ChangeAdminMessageStatusAddForeignKeyUserIdRefUsersOnIdAndAdminMessageIdRe
      */
     public function down()
     {
-        Schema::table('adminMessageStatus', function (Blueprint $table) {
-            $table->dropForeign(['admin_message_id']);
+
+        Schema::table('session_y', function (Blueprint $table) {
             $table->dropForeign(['user_id']);
         });
+
     }
 }

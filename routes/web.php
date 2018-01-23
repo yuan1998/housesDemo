@@ -11,11 +11,11 @@
 |
 */
 
-Route::any('/api/{m}/{a}',function($m,$a){
-   $ns = "App\Http\Controllers\\${m}Controller";
-   // dd($ns);
-   return (new $ns($m))->$a();
-});
+// Route::any('/api/{m}/{a}',function($m,$a){
+//    $ns = "App\Http\Controllers\\${m}Controller";
+//    // dd($ns);
+//    return (new $ns($m))->$a();
+// });
 
 Route::get('admin/{a}', function ($page) {
   return view("admin.$page");

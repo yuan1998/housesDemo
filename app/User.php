@@ -22,6 +22,11 @@ class User extends Authenticatable
     public $userPermission = [
         '1'=>'user',
     ];
+
+    public $casts=[
+      'data'=>'json',
+      'logs'=>'json',
+    ];
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -30,4 +35,48 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function set_data()
+    {
+        $data = $this->data;
+
+        array_set($data,$key,$value);
+
+        $this->data = $data;
+
+        $this->save();
+
+    }
+
+
+    public function get_data($key)
+    {
+
+        if(!$key){
+            $data = $this->data;
+        }elseif($key === 'user'){
+            $data = $this;
+            unset($data['data'],$data['logs']);
+        }
+
+      $A = (new \CustomHelp\HelpArray($data));
+
+      return (($key !== 'user')&& ($key)) ? $A->_get($key) : $A;
+    }
+
+
+
+
+    public function addLog()
+    {
+
+        $logs = $this->logs ?: [];
+
+        $logs[] = generateLog();
+
+        $this->logs = $logs;
+
+        $this->save();
+    }
+
 }

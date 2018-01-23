@@ -17,3 +17,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
   return $request->user();
 });
 
+
+Route::any('/yo',function(){
+   $a = request('a');
+   $r = sessiony('a');
+   // dd(sessiony('user')->toArray());
+   // sessiony()->forget('a');
+   return $r;
+   return '1';
+});
