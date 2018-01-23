@@ -7,23 +7,69 @@ use Illuminate\Database\Eloquent\Model;
 class SessionY extends Model
 {
 
+
+
+   /**
+    * Table Guarded.
+    * @var array
+    */
     protected $guarded = ['id'];
 
+
+
+    /**
+     * table Fillable.
+     * @var Array
+     */
     protected $fillable = ['token','user_id','data','expired_time','logs'];
 
+
+
+    /**
+     * table column type.
+     * @var Array
+     */
     public $casts=[
       'data'=>'json',
       'logs'=>'json',
     ];
 
+
+
+    /**
+     * Model table name.
+     * @var string
+     */
     protected $table = 'session_y';
+
+
+    /**
+     * session cache.
+     * @var Object
+     */
     public $cache;
 
 
+
+    /**
+     * has database users.
+     * @Yuan1998
+     * @DateTime 2018-01-23T14:48:35+0800
+     * @return   Object
+     */
     public function hasUsers(){
       return $this->hasOne('\App\User','id','user_id');
     }
 
+
+
+    /**
+     * create session.
+     *
+     * @Yuan1998
+     * @DateTime 2018-01-23T14:47:56+0800
+     * @return   String                   create session token.
+     */
     public function createSession()
     {
       $this->token = $this->generateToken();
@@ -33,6 +79,14 @@ class SessionY extends Model
       return $this->cache->token;
     }
 
+
+    /**
+     * find session.
+     *
+     * @Yuan1998
+     * @DateTime 2018-01-23T14:47:19+0800
+     * @return   Object                   $this|Model
+     */
     public function findSession()
     {
       $cache = $this->cache;
@@ -47,6 +101,15 @@ class SessionY extends Model
 
     }
 
+
+    /**
+     * On login save current user.
+     *
+     * @Yuan1998
+     * @DateTime 2018-01-23T14:45:16+0800
+     * @param    String                   $id  user id
+     * @return   Object                   $this|Model
+     */
     public function saveUserId($id)
     {
 
@@ -56,7 +119,6 @@ class SessionY extends Model
 
       $this->mergeData();
       $this->mergeLogs();
-      dd($this->user);
 
       return $this;
     }
@@ -153,10 +215,11 @@ class SessionY extends Model
 
 
     /**
-     * [generateToken description]
+     * generate token.
+     *
      * @Yuan1998
      * @DateTime 2018-01-23T14:28:02+0800
-     * @return   [type]                   [description]
+     * @return   [string]                   token
      */
     private function generateToken()
     {
@@ -168,11 +231,30 @@ class SessionY extends Model
       return $token;
     }
 
+
+
+    /**
+     * find token.
+     *
+     * @Yuan1998
+     * @DateTime 2018-01-23T14:37:23+0800
+     * @param    [string]                   $token [s_token]
+     * @return   [Object]                          $this->cache|Model
+     */
     public function findToken($token)
     {
       return ($this->cache = $this->where('token',$token)->first());
     }
 
+
+    /**
+     * get session temporate data.
+     *
+     * @Yuan1998
+     * @DateTime 2018-01-23T14:39:23+0800
+     * @param    [string]                   $key [find data keyword]
+     * @return   [array]                        [find result.]
+     */
     public function get_data($key)
     {
 
@@ -182,6 +264,15 @@ class SessionY extends Model
 
     }
 
+
+    /**
+     * set temporate data
+     *
+     * @Yuan1998
+     * @DateTime 2018-01-23T14:40:50+0800
+     * @param    [String]                   $key   [save key name]
+     * @param    [String|Array]                   $value [save value]
+     */
     public function set_data($key,$value)
     {
 
@@ -193,6 +284,12 @@ class SessionY extends Model
     }
 
 
+    /**
+     * add log.
+     *
+     * @Yuan1998
+     * @DateTime 2018-01-23T14:42:15+0800
+     */
     public function addLog()
     {
 
@@ -206,11 +303,26 @@ class SessionY extends Model
       }
     }
 
+
+    /**
+     * remove expired session.
+     * @Yuan1998
+     * @DateTime 2018-01-23T14:42:35+0800
+     * @return   [null]
+     */
     public function dropExpired()
     {
       $this->where('expired_time','<',_getDate())->delete();
     }
 
+
+    /**
+     * generate expired time.
+     * @Yuan1998
+     * @DateTime 2018-01-23T14:43:12+0800
+     * @param    boolean                  $remenber [if remenber.save 30days. else save 3days]
+     * @return   DateTime                             generate result.
+     */
     public function expired_time($remenber = false)
     {
       $day = $remenber ? 30 : 3;
