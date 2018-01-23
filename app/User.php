@@ -52,16 +52,16 @@ class User extends Authenticatable
     public function get_data($key)
     {
 
-        if(!$key){
-            $data = $this->data;
-        }elseif($key === 'user'){
-            $data = $this;
+        if($key === 'user'){
+            $data = $this->toArray();
             unset($data['data'],$data['logs']);
+        }else{
+            $data = $this->data;
         }
 
-      $A = (new \CustomHelp\HelpArray($data));
-
-      return (($key !== 'user')&& ($key)) ? $A->_get($key) : $A;
+        $A = (new \CustomHelp\HelpArray($data));
+        return $A;
+        return (($key !== 'user') && ($key)) ? $A->_get($key) : $A;
     }
 
 

@@ -61,7 +61,27 @@ class SessionY extends Model
       return $this;
     }
 
+    /**
+     * on Logout remove session user_id
+     *
+     * @Yuan1998
+     * @DateTime 2018-01-23T14:22:28+0800
+     * @return   [type]                   [description]
+     */
+    public function removeUserId_logout()
+    {
+      $this->cache->user_id = null;
+      unset($this->user);
+      $this->cache->save();
+    }
 
+    /**
+     * save user data or save temporate data
+     * @Yuan1998
+     * @DateTime 2018-01-23T14:23:26+0800
+     * @param    {data}                   $data ['a'=>'b']
+     * @return   null
+     */
     public function saveData($data=null)
     {
 
@@ -72,6 +92,14 @@ class SessionY extends Model
 
     }
 
+
+
+    /**
+     * On login. merge temporate data to user data.
+     * @Yuan1998
+     * @DateTime 2018-01-23T14:24:46+0800
+     * @return   [type]                   [description]
+     */
     public function mergeData()
     {
 
@@ -87,7 +115,13 @@ class SessionY extends Model
     }
 
 
-
+    /**
+     * On login merge temporate logs to user logs
+     *
+     * @Yuan1998
+     * @DateTime 2018-01-23T14:25:28+0800
+     * @return   null
+     */
     public function mergeLogs()
     {
 
@@ -98,12 +132,17 @@ class SessionY extends Model
          $this->user->logs = array_merge($slogs,$ulogs);
          $this->user->save();
       }
-
-
     }
 
 
-
+    /**
+     * On session user_id exists , find user.
+     *
+     * @Yuan1998
+     * @DateTime 2018-01-23T14:26:00+0800
+     * @param    [id]                   $id [user_id]
+     * @return   [type]                       [description]
+     */
     public function findUser($id)
     {
 
@@ -113,7 +152,12 @@ class SessionY extends Model
 
 
 
-
+    /**
+     * [generateToken description]
+     * @Yuan1998
+     * @DateTime 2018-01-23T14:28:02+0800
+     * @return   [type]                   [description]
+     */
     private function generateToken()
     {
 

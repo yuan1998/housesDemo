@@ -13,7 +13,7 @@ class CreateAdminMessageStatus extends Migration
      */
     public function up()
     {
-        Schema::create('adminMessageStatus', function (Blueprint $table) {
+        Schema::create('admin_message_statuses', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('admin_message_id')->comment('foreign key,adminMessage ID');
             $table->string('status')->default('read')->comment('user read status');
@@ -29,6 +29,6 @@ class CreateAdminMessageStatus extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('adminMessageStatus');
+        Schema::dropIfExists('admin_message_statuses');
     }
 }

@@ -13,7 +13,7 @@ class ChangeAdminMessageAddForeignKeyMessageIdOnMessageTextContent extends Migra
      */
     public function up()
     {
-        Schema::table('adminMessages', function (Blueprint $table) {
+        Schema::table('admin_messages', function (Blueprint $table) {
             $table->foreign('message_id')->references('id')->on('messageText');
         });
     }
@@ -25,7 +25,7 @@ class ChangeAdminMessageAddForeignKeyMessageIdOnMessageTextContent extends Migra
      */
     public function down()
     {
-        Schema::table('adminMessages', function (Blueprint $table) {
+        Schema::table('admin_messages', function (Blueprint $table) {
             $table->dropForeign(['message_id']);
         });
     }

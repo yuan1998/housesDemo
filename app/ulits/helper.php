@@ -23,7 +23,6 @@ function sessiony()
 {
    $SY = newSession();
    $arg = func_get_args();
-   dd($SY->saveUserId(1));
    $SY = $SY->user ?: $SY;
    if(!$arg){
       return $SY->get_data();

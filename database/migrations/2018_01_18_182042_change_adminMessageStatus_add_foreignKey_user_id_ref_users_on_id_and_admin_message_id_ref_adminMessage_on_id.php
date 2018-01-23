@@ -13,7 +13,7 @@ class ChangeAdminMessageStatusAddForeignKeyUserIdRefUsersOnIdAndAdminMessageIdRe
      */
     public function up()
     {
-        Schema::table('adminMessageStatus', function (Blueprint $table) {
+        Schema::table('admin_message_statuses', function (Blueprint $table) {
             $table->foreign('admin_message_id')->references('id')->on('admin_messages');
             $table->foreign('user_id')->references('id')->on('users');
         });
@@ -26,7 +26,7 @@ class ChangeAdminMessageStatusAddForeignKeyUserIdRefUsersOnIdAndAdminMessageIdRe
      */
     public function down()
     {
-        Schema::table('adminMessageStatus', function (Blueprint $table) {
+        Schema::table('admin_message_statuses', function (Blueprint $table) {
             $table->dropForeign(['admin_message_id']);
             $table->dropForeign(['user_id']);
         });

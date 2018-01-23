@@ -20,9 +20,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::any('/yo',function(){
    $a = request('a');
-   $r = sessiony('a');
+   $r = sessiony('user');
    // dd(sessiony('user')->toArray());
    // sessiony()->forget('a');
-   return $r;
+   return $r->toArray();
    return '1';
 });

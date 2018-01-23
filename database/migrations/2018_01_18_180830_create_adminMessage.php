@@ -13,7 +13,7 @@ class CreateAdminMessage extends Migration
      */
     public function up()
     {
-        Schema::create('adminMessages', function (Blueprint $table) {
+        Schema::create('admin_messages', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('message_id')->comment('内容Id');
             $table->timestamps();
@@ -27,6 +27,6 @@ class CreateAdminMessage extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('adminMessages');
+        Schema::dropIfExists('admin_messages');
     }
 }
