@@ -8,7 +8,13 @@ use \App\User;
 
 class UserController extends ApiController
 {
-	// signup rules
+
+
+	/**
+	 * Signup Rules
+	 *
+	 * @var Array
+	 */
 	private $signupRules = [
 		'username'=>'required|between:6,32|unique:users',
 		'password'=>'required|min:6',
@@ -16,6 +22,12 @@ class UserController extends ApiController
 		'tel'=>'required|unique:users',
 	];
 
+
+
+	/**
+	 * Model Fillable.
+	 * @var Array
+	 */
 	protected $fillable = ['username','password','email','tel'];
 
 
@@ -45,11 +57,11 @@ class UserController extends ApiController
 		if(sessiony('user'))
 			return err('请先登出');
 
-
 		if(!($user = $this->loginValidate()))
 			return err('用户名或密码有误');
 
-		sessiony()->saveUserId($user->id);
+
+		newSession()->saveUserId($user->id);
 		return suc();
 	}
 
@@ -141,7 +153,7 @@ class UserController extends ApiController
 	{
 		// session in remove user
 
-		sessiony()->forget('user');
+		newSession()->removeUserId();
 
 		return suc();
 	}
@@ -158,11 +170,11 @@ class UserController extends ApiController
 	public function is_login()
 	{
 
-		if(sessiony('user')){
+		if($a = sessiony('user')){
 
 			$want = request('want');
 
-			return $want ? suc(session('user')->_all($want)) : suc();
+			return $want ? suc($a->_all($want)) : suc();
 		}
 
 		return err(null,200);

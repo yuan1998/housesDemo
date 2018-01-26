@@ -15,12 +15,12 @@ class createToken
      */
     public function handle($request, Closure $next)
     {
+
         $SY = newSession();
 
         $session_name = 's_token';
 
         $token = $request->get($session_name) ?: $request->header($session_name);
-
 
         if(!$token || !$SY->findToken($token)){
             $token = $SY->createSession();

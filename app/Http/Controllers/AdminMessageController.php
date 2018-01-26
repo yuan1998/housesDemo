@@ -9,12 +9,27 @@ class adminMessageController extends ApiController
 {
 
 
+
+   /**
+    * new Model
+    *
+    * @Yuan1998
+    * @DateTime 2018-01-24T15:10:49+0800
+    */
    public function __construct()
    {
       $this->model = new AdminMessage;
    }
 
 
+
+   /**
+    * send Message Api
+    *
+    * @Yuan1998
+    * @DateTime 2018-01-24T15:11:00+0800
+    * @return   [Array]                   Result success: true|false
+    */
    public function sendMessage()
    {
       if(!$message = request('content'))
@@ -28,12 +43,23 @@ class adminMessageController extends ApiController
       return $this->resultReturn($r->id);
    }
 
-   public function userGetMessage($count = null)
+
+
+
+
+   /**
+    * get user All Messages
+    *
+    * @Yuan1998
+    * @DateTime 2018-01-24T15:11:45+0800
+    * @param    boolean                   $count [On $count is true,return user Unread Messages.]
+    * @return   Array                          Result Success: true|false & Data : data|errorMsg
+    */
+   public function userGetMessage($count = false)
    {
-      if(!session('user'))
+      if(! $id = userIsLogin())
          return err('not user log');
 
-      $id = session('user')->id;
 
       if($count){
          $r = $this->joinMessageTable($id)->where('status',null)->count();
@@ -43,14 +69,34 @@ class adminMessageController extends ApiController
 
 
       return $this->resultReturn($r);
+
    }
 
 
+
+   /**
+    * Get User Unread Messages Count.
+    *
+    * @Yuan1998
+    * @DateTime 2018-01-24T15:15:32+0800
+    * @return   [type]                   [description]
+    */
    public function getUnreadCount()
    {
       return $this->userGetMessage(true);
    }
 
+
+
+   /**
+    * Join MessageText Get Message Content.
+    * Join AdminMessageStatuses Get Message Status.
+    *
+    * @Yuan1998
+    * @DateTime 2018-01-24T15:16:02+0800
+    * @param    String                   $id User Id .
+    * @return   Object                       Model $this.
+    */
    public function joinMessageTable($id)
    {
       return  $this->model

@@ -78,10 +78,9 @@ class envelopeController extends ApiController
    public function getUserMessage()
    {
 
-      if(!session('user'))
+      if(!$id =userIsLogin())
          return err('not user log');
 
-      $id = session('user')->id;
 
       $r = $this->model
             ->select('envelopes.*','messageText.content','users.username')
@@ -96,10 +95,9 @@ class envelopeController extends ApiController
 
    public function getUnreadCount()
    {
-      if(!session('user'))
-         return err('not user log');
 
-      $id = session('user')->id;
+      if(!$id =userIsLogin())
+         return err('not user log');
 
       $r = $this->model
             ->select('envelopes.*','messageText.content')

@@ -24,7 +24,9 @@
    height: 6px;
    background: red;
 }
-
+.am-nav li .am-badge{
+   margin-top: 4px;
+}
 
 /**
  *   sell house page.
@@ -34,9 +36,14 @@
    border:none;
    box-shadow: none;
 }
-#sell-house-form .am-hide-sm dl *{
-   height: 100%;
-   max-height: 100%;
+#sell-house-form dl dt {
+   margin-top: 12px;
+}
+#sell-house-form dl dd input{
+   font-size: 14px;
+}
+#sell-house-form dl dd .am-u-md-3 input{
+   background: #eee;
 }
 
 /**
@@ -51,5 +58,16 @@
    color:#0e90d2;
 }
 
+.am-offcanvas-bar:after {
+    width: 0px;
+}
 
-
+/**
+ *  user Info page.
+ */
+#message-sibe-nav li a,
+#user-sibe-nav li a{
+   padding-left: 0;
+   padding-right: 0;
+   font-size: 16px;
+}

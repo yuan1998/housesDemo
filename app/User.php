@@ -9,24 +9,43 @@ class User extends Authenticatable
 {
     use Notifiable;
 
+
+
     /**
-     * The attributes that are mass assignable.
-     *
+     * The Attribute is Protection Column.
      * @var array
      */
-
     protected $guarded = ['id'];
 
+
+    /**
+     * The Attribute is set Table Name.
+     * @var string
+     */
     public $table = 'users';
 
-    public $userPermission = [
+
+    /**
+     * The Attribute is Users Permissions Leave.
+     * @var Array
+     */
+    public $userPermissionList = [
         '1'=>'user',
     ];
 
+
+
+    /**
+     * The Attribute is set Column Type.
+     * @var Array
+     */
     public $casts=[
       'data'=>'json',
       'logs'=>'json',
     ];
+
+
+
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -36,47 +55,6 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function set_data()
-    {
-        $data = $this->data;
 
-        array_set($data,$key,$value);
-
-        $this->data = $data;
-
-        $this->save();
-
-    }
-
-
-    public function get_data($key)
-    {
-
-        if($key === 'user'){
-            $data = $this->toArray();
-            unset($data['data'],$data['logs']);
-        }else{
-            $data = $this->data;
-        }
-
-        $A = (new \CustomHelp\HelpArray($data));
-        return $A;
-        return (($key !== 'user') && ($key)) ? $A->_get($key) : $A;
-    }
-
-
-
-
-    public function addLog()
-    {
-
-        $logs = $this->logs ?: [];
-
-        $logs[] = generateLog();
-
-        $this->logs = $logs;
-
-        $this->save();
-    }
 
 }

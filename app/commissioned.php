@@ -11,10 +11,11 @@ class Commissioned extends Model
       'unit_number',
       'building_number',
       'house_number',
-      'constant',
+      'contact',
       'tel',
       'user_id',
       'expect_price',
+      'city',
    ];
 
    public $guarded = ['id'];

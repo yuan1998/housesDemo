@@ -38,7 +38,7 @@ class AdminMessageStatusController extends ApiController
       $data =
       [
          'admin_message_id'=>request('id'),
-         'user_id'=>session('user')->id,
+         'user_id'=>sessiony('user')->id,
       ];
 
       return $this->validator($rules,$data);

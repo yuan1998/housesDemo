@@ -8,17 +8,7 @@
 }
 
 
-dt+dd{
-	margin-top: 0;
-}
-.font-0{
-	font-size: 0;
-	display: block;
-}
-.font-1{
-	display: inline-block;
-	font-size: 1.6rem;
-}
+
 
 .sibeBar{
 	/*width: 364px;*/
@@ -57,6 +47,7 @@ dt+dd{
 	line-height: 30px;
 	height: 30px;
 }
+
 
 
 .compact{

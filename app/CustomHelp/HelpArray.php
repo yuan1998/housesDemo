@@ -9,6 +9,7 @@ class HelpArray
 
 
    public function __construct($data){
+
       $this->fill($data);
    }
 
@@ -60,7 +61,7 @@ class HelpArray
          $r = [];
          foreach($arr as $value){
             if(isset($a[$value]))
-               array_push($r, $value);
+               $r[$value] = $a[$value];
          }
          return $r;
       }else{

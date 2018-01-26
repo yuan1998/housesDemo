@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use \App\SessionUser as UserModel;
 
 class SessionY extends Model
 {
@@ -58,7 +59,7 @@ class SessionY extends Model
      * @return   Object
      */
     public function hasUsers(){
-      return $this->hasOne('\App\User','id','user_id');
+      return $this->hasOne('\App\SessionUser','id','user_id');
     }
 
 
@@ -95,7 +96,7 @@ class SessionY extends Model
          return false;
 
       if( $id = $cache->user_id)
-         $this->findUser($id);
+         $this->user = UserModel::findUser($id);
 
       return $this;
 
@@ -110,18 +111,33 @@ class SessionY extends Model
      * @param    String                   $id  user id
      * @return   Object                   $this|Model
      */
+
     public function saveUserId($id)
     {
 
-      $this->cache->user_id = $id;
-      $this->cache->save();
-      $this->findUser($id);
+      $this->setUserId($id);
+
+      $this->user = UserModel::findUser($id);
+
+      $this->LoginMerge();
+
+    }
+
+
+    /**
+     * merge Data & Logs.
+     * @Yuan1998
+     * @DateTime 2018-01-24T14:41:28+0800
+     */
+    public function LoginMerge()
+    {
 
       $this->mergeData();
       $this->mergeLogs();
 
       return $this;
     }
+
 
     /**
      * on Logout remove session user_id
@@ -130,12 +146,13 @@ class SessionY extends Model
      * @DateTime 2018-01-23T14:22:28+0800
      * @return   [type]                   [description]
      */
-    public function removeUserId_logout()
+    public function removeUserId()
     {
-      $this->cache->user_id = null;
+
+      $this->setUserId();
       unset($this->user);
-      $this->cache->save();
     }
+
 
     /**
      * save user data or save temporate data
@@ -192,26 +209,12 @@ class SessionY extends Model
          $ulogs = $this->user->logs ?:[];
 
          $this->user->logs = array_merge($slogs,$ulogs);
+
          $this->user->save();
+
       }
-    }
-
-
-    /**
-     * On session user_id exists , find user.
-     *
-     * @Yuan1998
-     * @DateTime 2018-01-23T14:26:00+0800
-     * @param    [id]                   $id [user_id]
-     * @return   [type]                       [description]
-     */
-    public function findUser($id)
-    {
-
-      $this->user = (new \App\User)->where('id',$id)->first();
 
     }
-
 
 
     /**
@@ -255,8 +258,10 @@ class SessionY extends Model
      * @param    [string]                   $key [find data keyword]
      * @return   [array]                        [find result.]
      */
-    public function get_data($key)
+    public function get_data($key=false)
     {
+      if($key === 'user')
+         return false;
 
       $A = (new \CustomHelp\HelpArray($this->cache->data));
 
@@ -329,5 +334,18 @@ class SessionY extends Model
       return _getDate($day);
     }
 
+
+
+    /**
+     * set Session User_id
+     * @Yuan1998
+     * @DateTime 2018-01-24T16:05:26+0800
+     * @param    String                   $id  default is null.
+     */
+    public function setUserId($id=null)
+    {
+        $this->cache->user_id = $id;
+        $this->cache->save();
+    }
 
 }
