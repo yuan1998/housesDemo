@@ -44,6 +44,13 @@ class User extends Authenticatable
       'logs'=>'json',
     ];
 
+        /**
+     * Model Fillable.
+     * @var Array
+     */
+    protected $fillable = ['username','password','email','tel'];
+
+
 
 
     /**

@@ -10,37 +10,31 @@ class UserController extends ApiController
 {
 
 
-	/**
-	 * Signup Rules
-	 *
-	 * @var Array
-	 */
-	private $signupRules = [
-		'username'=>'required|between:6,32|unique:users',
-		'password'=>'required|min:6',
-		'email'=>'required|email|unique:users',
-		'tel'=>'required|unique:users',
-	];
+   /**
+    * Signup Rules
+    *
+    * @var Array
+    */
+   private $signupRules = [
+      'username'=>'required|between:6,32|unique:users',
+      'password'=>'required|min:6',
+      'email'=>'required|email|unique:users',
+      'tel'=>'required|unique:users',
+   ];
 
 
 
-	/**
-	 * Model Fillable.
-	 * @var Array
-	 */
-	protected $fillable = ['username','password','email','tel'];
 
 
+   /**
+    * [__construct description]
+    * @Yuan1998
+    * @DateTime 2018-01-23T15:16:51+0800
+    */
+   public function __construct(){
+      // $model = "\App\user";
 
-	/**
-	 * [__construct description]
-	 * @Yuan1998
-	 * @DateTime 2018-01-23T15:16:51+0800
-	 */
-	public function __construct(){
-		// $model = "\App\user";
-
-    	// $this->model = new $model;
+      // $this->model = new $model;
       $this->model = new User;
    }
 
@@ -54,150 +48,201 @@ class UserController extends ApiController
    public function login()
    {
 
-		if(sessiony('user'))
-			return err('请先登出');
+      if(sessiony('user'))
+         return err('请先登出');
 
-		if(!($user = $this->loginValidate()))
-			return err('用户名或密码有误');
-
-
-		newSession()->saveUserId($user->id);
-		return suc();
-	}
+      if(!($user = $this->loginValidate()))
+         return err('用户名或密码有误');
 
 
-
-	/**
-	 * Login Validator.
-	 * @Yuan1998
-	 * @DateTime 2018-01-23T15:05:14+0800
-	 * @return   Array|false                   Validate pass,return data,else return false.
-	 */
-	private function loginValidate()
-	{
-
-		if(!($username = request('username'))||!($password=request('password')))
-			return false;
-
-		$user=$this->model->where('username',$username)->first();
-
-
-		if(!$user)
-			return false;
-
-
-		if(!Hash::check($password,$user['password']))
-			return false;
-		return $user;
-	}
+      newSession()->saveUserId($user->id);
+      return suc();
+   }
 
 
 
-	/**
-	 * Signup Api
-	 * @Yuan1998
-	 * @DateTime 2018-01-23T15:06:25+0800
-	 * @return   Array                   signup success return true&lastId,else return false.
-	 */
-	public function signup()
-	{
+   /**
+    * Login Validator.
+    * @Yuan1998
+    * @DateTime 2018-01-23T15:05:14+0800
+    * @return   Array|false                   Validate pass,return data,else return false.
+    */
+   private function loginValidate()
+   {
 
-		// get form data and validate
+      if(!($username = request('username'))||!($password=request('password')))
+         return false;
 
-		if( !$data = $this->signupValidate())
-			return $this->getError();
-
-
-
-		$r = $this->model->create($data);
-
-		return $r ? suc($r->id) : err('error');
-
-	}
+      $user=$this->model->where('username',$username)->orWhere('tel',$username)->orWhere('email',$username)->first();
 
 
+      if(!$user)
+         return false;
 
 
-	/**
-	 * Signup validator.
-	 * @Yuan1998
-	 * @DateTime 2018-01-23T15:07:49+0800
-	 * @return   Array|false                   On success return validate data. else return false.
-	 */
-	private function signupValidate()
-	{
-		// get need data
-		$data =request()->toArray();
-
-
-		$data = $this->validator($this->signupRules,$data);
-
-
-		if(!$data)
-			return false;
-
-		$data['password'] = Hash::make($data['password']);
-
-		return $data;
-	}
+      if(!Hash::check($password,$user['password']))
+         return false;
+      return $user;
+   }
 
 
 
-	/**
-	 * Login out Api
-	 * @Yuan1998
-	 * @DateTime 2018-01-23T15:08:53+0800
-	 * @return   Array                   ['success'=>true]
-	 */
-	public function logout()
-	{
-		// session in remove user
+   /**
+    * Signup Api
+    * @Yuan1998
+    * @DateTime 2018-01-23T15:06:25+0800
+    * @return   Array                   signup success return true&lastId,else return false.
+    */
+   public function signup()
+   {
 
-		newSession()->removeUserId();
+      // get form data and validate
 
-		return suc();
-	}
-
+      if( !$data = $this->signupValidate())
+         return $this->getError();
 
 
-	/**
-	 * judge is login.
-	 *
-	 * @Yuan1998
-	 * @DateTime 2018-01-23T15:09:35+0800
-	 * @return   boolean                  [description]
-	 */
-	public function is_login()
-	{
 
-		if($a = sessiony('user')){
+      $r = $this->model->create($data);
 
-			$want = request('want');
+      return $r ? suc($r->id) : err('error');
 
-			return $want ? suc($a->_all($want)) : suc();
-		}
-
-		return err(null,200);
-	}
+   }
 
 
-	/**
-	 * get User Data.
-	 * @Yuan1998
-	 * @DateTime 2018-01-23T15:10:33+0800
-	 * @return   Array                   On success return true&&user data. fail return false&&errorMsg.
-	 */
-	public function getUserData(){
-		$user =sessiony('user');
-
-		if(!$user )
-
-			return err('not user');
-
-		return suc($user->toArray());
-
-	}
 
 
+   /**
+    * Signup validator.
+    * @Yuan1998
+    * @DateTime 2018-01-23T15:07:49+0800
+    * @return   Array|false                   On success return validate data. else return false.
+    */
+   private function signupValidate()
+   {
+      // get need data
+      $data =request()->toArray();
+
+
+      $data = $this->validator($this->signupRules,$data);
+
+
+      if(!$data)
+         return false;
+
+      $data['password'] = Hash::make($data['password']);
+
+      return $data;
+   }
+
+
+
+   /**
+    * Login out Api
+    * @Yuan1998
+    * @DateTime 2018-01-23T15:08:53+0800
+    * @return   Array                   ['success'=>true]
+    */
+   public function logout()
+   {
+      // session in remove user
+
+      newSession()->removeUserId();
+
+      return suc();
+   }
+
+
+
+   /**
+    * judge is login.
+    *
+    * @Yuan1998
+    * @DateTime 2018-01-23T15:09:35+0800
+    * @return   boolean                  [description]
+    */
+   public function is_login()
+   {
+
+      if($a = sessiony('user')){
+
+         $want = request('want');
+
+         return $want ? suc($a->_all($want)) : suc();
+      }
+
+      return err(null,200);
+   }
+
+
+   /**
+    * get User Data.
+    * @Yuan1998
+    * @DateTime 2018-01-23T15:10:33+0800
+    * @return   Array                   On success return true&&user data. fail return false&&errorMsg.
+    */
+   public function getUserData(){
+      $user =sessiony('user');
+
+      if(!$user )
+
+         return err('not user');
+
+      return suc($user->toArray());
+
+   }
+
+   /**
+    * find username exists
+    * @Yuan1998
+    * @DateTime 2018-01-27T15:17:21+0800
+    * @return   array                   data = true|false
+    */
+   public function usernameExists()
+   {
+      $key = 'username';
+      return $this->find_key_exists($key);
+   }
+
+
+   /**
+    * find email exists
+    * @Yuan1998
+    * @DateTime 2018-01-27T15:18:10+0800
+    * @return   array                    data = true|false
+    */
+   public function emailExists()
+   {
+       $key = 'email';
+       return $this->find_key_exists($key);
+   }
+
+
+   /**
+    * find tel exists
+    * @Yuan1998
+    * @DateTime 2018-01-27T15:18:38+0800
+    * @return   Array
+    */
+   public function telExists()
+   {
+       $key = 'tel';
+       return $this->find_key_exists($key);
+   }
+
+
+   /**
+    * the function is find xxxExists core;
+    * @Yuan1998
+    * @DateTime 2018-01-27T15:19:03+0800
+    * @param    String                   $key key get value in the request.
+    * @return   boolean                        find result
+    */
+   private function find_key_exists($key)
+   {
+      $value = request($key);
+      $r = $this->model->where($key,$value)->exists();
+      return suc($r);
+   }
 
 }

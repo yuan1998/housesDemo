@@ -19,27 +19,14 @@ class HouseController extends ApiController
     ];
 
 
-    // create rules
-    private $createRules =
-    [
-        'community'=>'required',
-        'expect_price'=>'required',
-        'contact'=>'required',
-        'tel'=>'required',
-        'building'=>'required',
-        'unit'=>'required',
-        'house_number'=>'required',
-        // 'user_id'=>'e'
-    ];
-
-
     // other column rules
-    private $otherRules =
+    protected $otherRules =
     [
         'title'=>array('required','filled','max:50'),
         'sub_title'=>array('required','filled','max:50'),
         'area'=>'required',
     ];
+
 
     public function __construct(){
       $this->model = new House;
@@ -61,14 +48,49 @@ class HouseController extends ApiController
             return err('empty params');
 
         // validate pass save data;
-    	$r = $this->model->create($data);
-    	return $r ? suc($r->id) : err('error');
+        $r = $this->model->create($data);
+        return $r ? suc($r->id) : err('error');
+    }
+
+
+
+    public function add()
+    {
+
+        if(! $data =$this->createValidator())
+            return $this->getError();
+
+        $r = $this->model->create($data);
+
+        return $this->resultReturn($r->id);
+
+    }
+
+
+    /**
+     * 创建一条数据时的验证器
+     *
+     * @Yuan1998
+     * @DateTime 2018-01-26T14:04:30+0800
+     * @return   Array|Boolean                   validate pass return data,unpass return false.
+     */
+    private function createValidator()
+    {
+        $cid = request()->commissioned_id;
+        $uid = sessiony('user')->id;
+        $r = $this->model->hasCommissioned()->where('id',$cid)->where('user_id',$uid)->exists();
+
+        if(!$r)
+            return false;
+
+        return $this->validator($rule);
+
     }
 
     // return status list
     public function getStatusList()
     {
-        // get all status
+        // return all status
     	return suc($this->statusList);
     }
 

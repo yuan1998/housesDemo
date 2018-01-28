@@ -21,7 +21,13 @@ use \App\Http\Controllers\EnvelopeController as EnvelopeC;
 //   return $request->user();
 // });
 
-Route::group(['prefix'=>'user'],function($app){
+Route::group(['prefix'=>'user'],function(){
+
+   Route::any('usernameExists','UserController@usernameExists');
+
+   Route::any('emailExists','UserController@emailExists');
+
+   Route::any('telExists','UserController@telExists');
 
    Route::any('login','UserController@login');
 
@@ -38,7 +44,7 @@ Route::group(['prefix'=>'user'],function($app){
 });
 
 
-Route::group(['prefix'=>'house'],function($app){
+Route::group(['prefix'=>'house'],function(){
 
    Route::any('getStatusList','HouseController@getStatusList');
 
@@ -51,17 +57,19 @@ Route::group(['prefix'=>'house'],function($app){
 });
 
 
-Route::group(['prefix'=>'commissioned'],function($app){
+Route::group(['prefix'=>'commissioned'],function(){
 
    Route::any('create','CommissionedController@createCommissioned')->middleware('Api:user');
 
    Route::any('read','CommissionedController@getUserCommissioneds')->middleware('Api:user');
 
+   Route::any('readId','CommissionedController@getIdCommissioned')->middleware('Api:user');
+
    Route::any('statusList','CommissionedController@getStatusList');
 
 });
 
-Route::group(['prefix'=>'envelope'],function($app){
+Route::group(['prefix'=>'envelope'],function(){
 
    Route::any('getUserMessage','EnvelopeController@getUserMessage')->middleware('Api:user');
 

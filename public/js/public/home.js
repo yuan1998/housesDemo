@@ -537,19 +537,21 @@ const store = new Vuex.Store({
                      <div class="am-u-lg-8 am-u-sm-12 am-form">
                         <form v-on:submit.prevent="add" class="am-sm-text-center am-g-collapse" id="sell-house-form">
                            <div class="am-hide-sm">
-                              <dl class='am-padding-vertical am-text-center'>
+                              <dl class='am-g am-padding-vertical am-text-center'>
                                  <dt class="am-u-md-3 am-text-middle">城市位置</dt>
                                  <dd class="am-u-md-9 am-text-middle">
                                     <input class="input-border-hide am-form-field am-u-lg-12" placeholder="请输入城市位置" type="text" v-model="row.city">
                                  </dd>
                               </dl>
-                              <dl class='am-padding-vertical am-text-center'>
+
+                              <dl class='am-g am-padding-vertical am-text-center'>
                                  <dt class="am-u-md-3 am-text-middle">小区</dt>
                                  <dd class="am-u-md-9 am-text-middle">
                                     <input class="input-border-hide am-form-field am-u-lg-12" placeholder="请输入小区的名称，方便我们审核" type="text" v-model="row.community">
                                  </dd>
                               </dl>
-                              <dl class='am-padding-vertical am-text-center' >
+
+                              <dl class='am-g am-padding-vertical am-text-center' >
                                  <dt class="am-text-middle am-u-md-3">房屋地址</dt>
                                  <dd class="am-u-md-9 am-text-middle">
                                     <div class="am-u-md-3">
@@ -563,27 +565,30 @@ const store = new Vuex.Store({
                                     </div>
                                  </dd>
                               </dl>
-                              <dl class='am-padding-vertical am-text-center'>
+
+                              <dl class='am-g am-padding-vertical am-text-center'>
                                  <dt class="am-u-md-3 am-text-middle">期望售价</dt>
                                  <dd class="am-u-md-9 am-text-middle">
                                     <div class="am-u-md-4">
                                        <input class="am-form-field am-u-sm-12 am-text-right" placeholder="请输入你期望的价格" type="text" v-model="row.expect_price">
                                     </div>
                                     <div class="am-u-md-2">
-                                       <h4>万元</h4>
+                                       <span class="am-text-">万元</span>
                                     </div>
                                     <div class="am-u-md-6">
                                        <a href="">不太清楚如何定价? 先估个价</a>
                                     </div>
                                  </dd>
                               </dl>
-                              <dl class='am-padding-vertical am-text-center'>
+
+                              <dl class='am-g am-padding-vertical am-text-center'>
                                  <dt class="am-u-md-3 am-text-middle">称呼</dt>
                                  <dd class="am-u-md-9 am-text-middle">
                                     <input class="am-form-field am-u-sm-12" placeholder="我们应该如何称呼您" type="text" v-model="row.contact">
                                  </dd>
                               </dl>
-                              <dl class='am-padding-vertical am-text-center'>
+
+                              <dl class='am-g am-padding-vertical am-text-center'>
                                  <dt class="am-u-md-3 am-text-middle">手机号码</dt>
                                  <dd class="am-u-md-9 am-text-middle">
                                     <input class="am-form-field am-u-sm-12" placeholder="您的联系方式，方便我们联系您" type="text" v-model="row.tel">
@@ -682,16 +687,154 @@ const store = new Vuex.Store({
  */
    const houseCompletionComponent =
    {
-      template:`哈`,
-      mounted:function(){
+      template:
+      `
+         <transition>
+            <div class="content">
+               <div class="am-container">
+                  <div class="am-g">
+                     <div class="am-panel-default am-panel">
+                        <div class="am-panel-hd">
+                           <span>西安</span>
+                           <span>知心印花元素</span>
+                           <span>3号楼3单元1502号门牌</span>
+                        </div>
+                        <div class="am-panel-bd">
+                           <form  class="am-form am-form-horizontal">
+                              <div class="am-form-group">
+                                 <label class="am-u-sm-2">房屋面积</label>
+                                 <div class="am-u-sm-10">
+                                    <input type="text" v-model="row.arae"/>
+                                 </div>
+                              </div>
+                              <hr />
+                              <div class="am-form-group">
+                                 <label class="am-u-sm-2">户型</label>
+                                 <div class="am-u-sm-10">
+                                    <input type="text" v-model="row.room_count"/>
+                                 </div>
+                              </div>
+                              <hr />
+                              <div class="am-form-group">
+                                 <label class="am-u-sm-2">朝向</label>
+                                 <div class="am-u-sm-10">
+                                    <input type="text" v-model="row.direction"/>
+                                 </div>
+                              </div>
+                              <hr />
+                              <div class="am-form-group">
+                                 <label class="am-u-sm-2">所在楼层</label>
+                                 <div class="am-u-sm-10">
+                                    <input type="text" v-model="row.floor"/>
+                                 </div>
+                              </div>
+                              <hr />
+                              <div class="am-form-group">
+                                 <label class="am-u-sm-2">总楼层</label>
+                                 <div class="am-u-sm-10">
+                                    <input type="text" v-model="row.floors"/>
+                                 </div>
+                              </div>
+                              <hr />
+                              <div class="am-form-group">
+                                 <label class="am-u-sm-2">房屋类型</label>
+                                 <div class="am-u-sm-10">
+                                    <input type="text" v-model="row.house_type"/>
+                                 </div>
+                              </div>
+                              <hr />
+                              <div class="am-form-group">
+                                 <label class="am-u-sm-2">房屋装修</label>
+                                 <div class="am-u-sm-10">
+                                    <input type="text" v-model="row.Decoration"/>
+                                 </div>
+                              </div>
+                              <hr />
+                              <div class="am-form-group">
+                                 <label class="am-u-sm-2">楼房年龄</label>
+                                 <div class="am-u-sm-10">
+                                    <input type="text" v-model="row.floor_age"/>
+                                 </div>
+                              </div>
+                              <hr />
+                              <div class="am-form-group">
+                                 <label class="am-u-sm-2">房屋供暖</label>
+                                 <div class="am-u-sm-10">
+                                    <input type="text" v-model="row.supply_heating"/>
+                                 </div>
+                              </div>
+                              <hr />
+                              <div class="am-form-group">
+                                 <label class="am-u-sm-2">周边情况</label>
+                                 <div class="am-u-sm-10">
+                                    <input type="text" v-model="row.surroundings"/>
+                                 </div>
+                              </div>
+                              <hr />
+                              <div class="am-form-group">
+                                 <label class="am-u-sm-2">小区信息</label>
+                                 <div class="am-u-sm-10">
+                                    <input type="text" v-model="row.community_info"/>
+                                 </div>
+                              </div>
+                              <hr />
+                              <div class="am-form-group">
+                                 <label class="am-u-sm-2">周边交通</label>
+                                 <div class="am-u-sm-10">
+                                    <input type="text" v-model="row.traffic"/>
+                                 </div>
+                              </div>
+                              <hr />
+                              <div class="am-form-group">
+                                 <label class="am-u-sm-2">房产资料</label>
+                                 <div class="am-u-sm-10">
+                                    <input type="text" v-model="row.deed_info"/>
+                                 </div>
+                              </div>
+                              <hr />
+                              <div class="am-form-group">
+                                 <label class="am-u-sm-2">房屋年限</label>
+                                 <div class="am-u-sm-10">
+                                    <input type="text" v-model="row.house_age_limit"/>
+                                 </div>
+                              </div>
+                              <hr />
+                              <div class="am-form-group">
+                                 <label class="am-u-sm-2">房屋户型信息</label>
+                                 <div class="am-u-sm-10">
+                                    <input type="text" v-model="row.huxing_map_info"/>
+                                 </div>
+                              </div>
+                              <hr />
 
+
+                             <button type="submit" class="am-btn am-btn-primary">提交</button>
+                           </form>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </transition>
+      `,
+      props:['id'],
+      mounted:function(){
+         console.log(this.id);
       },
       methods:{
 
       },
       data:function(){
          return {
-
+            row:{
+               huxing_map:{
+                  ting:[],
+                  wei:[],
+                  wo:[],
+                  chu:[],
+                  yang:[],
+               },
+            },
          }
       }
    }
@@ -1211,7 +1354,8 @@ const NotFoundComponent = {
          meta:{title:'我要卖房'}
       },
       {
-         path:'/user/maifang/completion',
+         path:'/user/maifang/completion/:id',
+         props:true,
          component:houseCompletionComponent,
          meta:{title:'资料补全'}
       },
@@ -1305,8 +1449,9 @@ const NotFoundComponent = {
       mounted:function()
       {
 
-         // this.getUser ();
          store.dispatch('isLogin',{want:['username','email','tel','id','permission']});
+
+
       },
       methods:
       {

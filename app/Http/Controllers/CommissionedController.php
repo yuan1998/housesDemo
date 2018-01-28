@@ -59,6 +59,13 @@ class CommissionedController extends ApiController
 
    }
 
+   public function getIdCommissioned()
+   {
+
+      $r = $this->model->where('id',request('id'))->where('user_id',sessiony('user')->id)->first();
+      return $this->resultReturn($r);
+   }
+
    public function getStatusList()
    {
       return suc($this->statusList);

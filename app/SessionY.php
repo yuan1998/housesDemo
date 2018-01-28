@@ -75,7 +75,7 @@ class SessionY extends Model
     {
       $this->token = $this->generateToken();
 
-      $this->cache = $this->create(['expired_time'=>$this->expired_time(),'token'=>$this->token,'data'=>[]]);
+      $this->cache = $this->create(['expired_time'=>$this->expired_time(true),'token'=>$this->token,'data'=>[]]);
 
       return $this->cache->token;
     }
@@ -345,6 +345,7 @@ class SessionY extends Model
     public function setUserId($id=null)
     {
         $this->cache->user_id = $id;
+        $this->cache->expired_time = $this->expired_time(request('remenber'));
         $this->cache->save();
     }
 

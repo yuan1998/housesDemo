@@ -11,5 +11,16 @@ class House extends Model
 
 	public $table = 'houses';
 
+   protected $casts=
+   [
+      'tags'=>'json',
+      'huxing_map_info'=>'json',
+      'house_img'=>'json',
+   ];
+
+   public function hasCommissioned()
+   {
+      return $this->hasOne('\App\Commissioned','id','commissioned_id');
+   }
 
 }
