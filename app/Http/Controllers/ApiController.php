@@ -61,6 +61,7 @@ class ApiController extends Controller
             $this->error = $v->errors();
             return false;
         }
+
         return $data;
     }
 
@@ -106,4 +107,39 @@ class ApiController extends Controller
 
       return (new $mText)->saveMessageContent();
     }
+
+    public function parseBase64($imgstr)
+    {
+
+        $new_data=explode(";",$imgstr);
+
+        $type= explode("/",$new_data[0])[1];
+
+        $img= explode(",",$new_data[1])[1];
+
+        $path = base_path()."/public/storage/img/";
+
+        $fileName =   uniqid().time().'.' .$type;
+
+        $data = base64_decode($img);
+
+        $r = file_put_contents($path.$fileName, $data);
+
+        return $r ? ['name'=>$fileName,'type'=>$type,'size'=>$r] : false;
+    }
+
+    public function parseArrBase64($arr)
+    {
+        $nArr = [];
+
+        foreach($arr as $key=>$value){
+            $nArr[$key] = [];
+            foreach($value as $item){
+                array_push($nArr[$key], $this->parseBase64($item));
+            }
+        }
+
+        return $nArr;
+    }
+
 }

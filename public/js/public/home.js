@@ -230,16 +230,22 @@ const store = new Vuex.Store({
                <div class="am-container">
                   <div class="am-g">
                      <div class="am-u-sm-12 am-u-md-8 am-u-md-offset-2">
-                        <form class="am-form" v-on:submit.prevent="search">
+                        <form class="am-form" v-on:submit.prevent="sendFile">
                            <label class="am-input-group">
                               <input class="home-searchInput am-form-field" v-model="keyword" type="text" placeholder="试试输入地段" />
                               <span class="am-input-group-btn"><button type="submit" class='am-btn am-btn-default'><i class="am-icon-search"></i>搜索</button></span>
                            </label>
+                           <div class="am-form-group am-form-file">
+                             <button type="button" class="am-btn am-btn-default am-btn-sm">
+                               <i class="am-icon-cloud-upload"></i> 选择要上传的文件</button>
+                             <input @change="uploads" type="file" multiple>
+                           </div>
                         </form>
                      </div>
                   </div>
                </div>
             </div>
+
             <div class="hoem-search-result-content" v-show="searchStart == true">
                <div class="am-container">
                   <div v-if="result == false">
@@ -253,6 +259,7 @@ const store = new Vuex.Store({
                         </div>
                      </div>
                   </div>
+
                </div>
             </div>
          </div>
@@ -265,6 +272,7 @@ const store = new Vuex.Store({
             keyword:'',
             result:null,
             searchStart:false,
+            formData:{},
          }
       },
       methods:{
@@ -273,6 +281,11 @@ const store = new Vuex.Store({
                return;
             $.post('/api/house/titleSearch',{keyword:this.keyword}).then(res=>{
                this.result = res.data;
+            })
+         },
+         sendFile(){
+            $.post('/api/house/file',this.formData).then(res=>{
+               console.log(res);
             })
          },
          searchValidator(){
@@ -284,6 +297,27 @@ const store = new Vuex.Store({
             }
             return true;
          },
+         uploads(e){
+            var files = e.target.files || e.dataTransfer.files;
+
+            if(!files.length)
+               return ;
+
+            let a =this.img_to_base(files[0]);
+            console.log(a);
+         },
+         img_to_base(file){
+
+            let reader = new FileReader(),result;
+
+            reader.onload = (e) =>{
+               result = e.target.result;
+            }
+
+            reader.readAsDataURL(file);
+
+            return result;
+         }
       },
    };
 

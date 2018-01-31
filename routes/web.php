@@ -17,7 +17,7 @@
 //    return (new $ns($m))->$a();
 // });
 
-Route::get('/', function () {
-  return view("public.home");
-});
+// Route::get('/', function () {
+//   return view("public.home");
+// });
 

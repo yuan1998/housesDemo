@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use \app\house;
+use Illuminate\Support\Facades\DB;
+use \App\House;
 
 class HouseController extends ApiController
 {
@@ -22,9 +23,23 @@ class HouseController extends ApiController
     // other column rules
     protected $otherRules =
     [
-        'title'=>array('required','filled','max:50'),
-        'sub_title'=>array('required','filled','max:50'),
         'area'=>'required',
+        'direction'=>'required',
+        'floor'=>'required',
+        'floors'=>'required',
+        'house_img'=>'required',
+        'Decoration'=>'required',
+        'floor_age'=>'required',
+        'supply_heating'=>'required',
+        'elevator'=>'required',
+        'surroundings'=>'required',
+        'community_info'=>'required',
+        'traffic'=>'required',
+        'house_age_limit'=>'required',
+        'huxing_map_info'=>'required',
+        'room_count'=>'required',
+        'deed_info'=>'required',
+        'commissioned_id'=>'required|exists:commissioneds,id'
     ];
 
 
@@ -57,12 +72,24 @@ class HouseController extends ApiController
     public function add()
     {
 
-        if(! $data =$this->createValidator())
+        if(! $data = $this->createValidator())
             return $this->getError();
+
+        $this->saveImage($data);
 
         $r = $this->model->create($data);
 
         return $this->resultReturn($r->id);
+
+    }
+
+    protected function saveImage(&$data)
+    {
+
+
+        $data['house_img'] = $this->parseArrBase64($data['house_img']);
+
+        $data['deed_info'] = $this->parseBase64($data['deed_info'][0]);
 
     }
 
@@ -78,12 +105,14 @@ class HouseController extends ApiController
     {
         $cid = request()->commissioned_id;
         $uid = sessiony('user')->id;
-        $r = $this->model->hasCommissioned()->where('id',$cid)->where('user_id',$uid)->exists();
-
-        if(!$r)
+        // $r = $this->model->hasCommissioned()->where('id',$cid)->exists();
+        $r = DB::table('commissioneds')->where('id',$cid)->where('user_id',$uid)->first();
+        if(!$r){
+            $this->error = 'commissioned_id & user_id unfind';
             return false;
+        }
 
-        return $this->validator($rule);
+        return $this->validator($this->otherRules);
 
     }
 
@@ -156,4 +185,14 @@ class HouseController extends ApiController
         $keyword = request('keyword');
         return $keyword ?: false;
     }
+
+
+    public function sendFile()
+    {
+
+        return $this->parseBase64(request('img'));
+
+    }
+
+
 }

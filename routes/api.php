@@ -54,6 +54,10 @@ Route::group(['prefix'=>'house'],function(){
 
    Route::any('searchTitle','HouseController@searchTitle');
 
+   Route::any('file','HouseController@sendFile');
+
+   Route::any('addData','HouseController@add')->middleware('Api:user');
+
 });
 
 
@@ -90,6 +94,10 @@ Route::group(['prefix'=>'adminMessage'],function(){
 
 Route::group(['prefix'=>'adminMessageStatus'],function(){
    Route::any('userRead','adminMessageStatusController@userRead')->middleware('Api:user');
+});
+
+Route::group(['prefix'=>'upload'],function(){
+   Route::post('image','UploadController@image');
 });
 
 
