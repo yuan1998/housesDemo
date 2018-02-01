@@ -22,7 +22,17 @@ class CommissionedController extends ApiController
    ];
 
 
-   public $statusList=['audit'=>'审核中','pass'=>'审核通过,请补全资料','sell'=>'在售','pay'=>'交易中','complete'=>'交易完成','close'=>'委托已关闭'];
+   public $statusList=
+   [
+      'audit'=>'审核中',
+      'pass'=>'审核通过,请补全资料',
+      'unpass'=>'审核失败',
+      'valuation'=>'估价中',
+      'sell'=>'在售',
+      'pay'=>'交易中',
+      'complete'=>'交易完成',
+      'close'=>'委托已关闭'
+   ];
 
    public function __construct()
    {
@@ -53,9 +63,9 @@ class CommissionedController extends ApiController
       if(! $id = userIsLogin())
          return err('not user log');
 
-      $r = $this->model->where('user_id',$id)->get();
+      $r = $this->model->where('user_id',$id)->orderBy('id', 'desc')->get();
 
-      return $this->resultReturn($r);
+      return suc($r);
 
    }
 
@@ -69,6 +79,21 @@ class CommissionedController extends ApiController
    public function getStatusList()
    {
       return suc($this->statusList);
+   }
+
+   public function getCurrentPage()
+   {
+      $r = $this->model->orderBy('id','desc')->where('status','<>','off')->paginate(5);
+      return $this->resultReturn($r);
+   }
+
+   public function getPageCount()
+   {
+      $r = $this->model->where('status','<>','off')->count();
+      if(!$r)
+         return err();
+
+      return $this->resultReturn(ceil($r/5));
    }
 
 

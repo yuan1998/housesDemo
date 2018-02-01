@@ -79,7 +79,11 @@ class HouseController extends ApiController
 
         $r = $this->model->create($data);
 
-        return $this->resultReturn($r->id);
+        $cid = request()->commissioned_id;
+
+        $r = DB::table('commissioneds')->where('id',$cid)->update(['status'=>'valuation']);
+
+        return $this->resultReturn($r);
 
     }
 

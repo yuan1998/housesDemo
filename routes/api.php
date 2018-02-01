@@ -39,6 +39,8 @@ Route::group(['prefix'=>'user'],function(){
 
    Route::any('getUserData','UserController@getUserData')->middleware('Api:user');
 
+   Route::any('changeAvatar','UserController@changeUserAvatar')->middleware('Api:user');
+
    Route::any('getUserList','UserController@getUserList')->middleware('Api:admin');
 
 });
@@ -65,11 +67,15 @@ Route::group(['prefix'=>'commissioned'],function(){
 
    Route::any('create','CommissionedController@createCommissioned')->middleware('Api:user');
 
-   Route::any('read','CommissionedController@getUserCommissioneds')->middleware('Api:user');
+   Route::any('userRead','CommissionedController@getUserCommissioneds')->middleware('Api:user');
 
    Route::any('readId','CommissionedController@getIdCommissioned')->middleware('Api:user');
 
    Route::any('statusList','CommissionedController@getStatusList');
+
+   Route::any('getCount','CommissionedController@getPageCount')->middleware('Api:user');
+
+   Route::any('getPage','CommissionedController@getCurrentPage')->middleware('Api:user');
 
 });
 

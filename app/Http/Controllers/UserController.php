@@ -245,4 +245,37 @@ class UserController extends ApiController
       return suc($r);
    }
 
+   /**
+    * The method is change User Avatar
+    * @Yuan1998
+    * @DateTime 2018-01-31T16:58:15+0800
+    * @return   [type]                   [description]
+    */
+   public function changeUserAvatar()
+   {
+
+
+      if(!$user = nowUser())
+        return err('Not User');
+
+      if(!$file = request('file'))
+        return err('not File');
+
+      $newFile = $this->parseBase64($file);
+
+      if(!$newFile)
+        return err('upload Err');
+
+      $name = @sessiony('user')->avatar_url['name'];
+
+      if($name)
+        $this->removeFile($name);
+
+      $user->avatar_url = $newFile;
+      $r = $user->save();
+
+
+      return $this->resultReturn($r);
+   }
+
 }

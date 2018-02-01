@@ -42,6 +42,7 @@ class User extends Authenticatable
     public $casts=[
       'data'=>'json',
       'logs'=>'json',
+      'avatar_url'=>'json'
     ];
 
         /**

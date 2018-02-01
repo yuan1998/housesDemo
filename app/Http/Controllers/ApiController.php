@@ -95,12 +95,29 @@ class ApiController extends Controller
         return $r !== false ? suc($r) : err('error');
     }
 
+
+    /**
+     * The Method is Change Table in One Row.
+     * @Yuan1998
+     * @DateTime 2018-01-31T17:07:08+0800
+     * @param    [type]                   $id  [description]
+     * @param    [type]                   $who [description]
+     * @param    [type]                   $to  [description]
+     * @return   [type]                        [description]
+     */
     public function changeColumn($id,$who,$to)
     {
       return $this->model->where('id',$id)->update([$who=>$to]);
 
     }
 
+
+    /**
+     * The Method is save Message Text
+     * @Yuan1998
+     * @DateTime 2018-01-31T17:06:40+0800
+     * @return   [type]                   [description]
+     */
     protected function saveText()
     {
       $mText =  '\App\Http\Controllers\MessageTextController';
@@ -108,6 +125,14 @@ class ApiController extends Controller
       return (new $mText)->saveMessageContent();
     }
 
+
+    /**
+     * The Method is Parse Base64 File And Save
+     * @Yuan1998
+     * @DateTime 2018-01-31T17:05:24+0800
+     * @param    String                   $imgstr  Base64 String
+     * @return   [type]                           [description]
+     */
     public function parseBase64($imgstr)
     {
 
@@ -128,6 +153,14 @@ class ApiController extends Controller
         return $r ? ['name'=>$fileName,'type'=>$type,'size'=>$r] : false;
     }
 
+
+    /**
+     * The Method is Parse Base64 Arr Data.
+     * @Yuan1998
+     * @DateTime 2018-01-31T17:04:23+0800
+     * @param    Array                   $arr  Base64 in the Array
+     * @return   [type]                        [description]
+     */
     public function parseArrBase64($arr)
     {
         $nArr = [];
@@ -140,6 +173,21 @@ class ApiController extends Controller
         }
 
         return $nArr;
+    }
+
+
+    /**
+     * The method is remove file in the Storage.
+     * @Yuan1998
+     * @DateTime 2018-01-31T17:03:31+0800
+     * @param    String                   $name  File Name
+     * @return   [type]                         [description]
+     */
+    public function removeFile($name)
+    {
+        $path = base_path()."/public/storage/img/";
+
+        return unlink($path.$name);
     }
 
 }
