@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use \App\AdminMessage;
+use \App\Http\Controllers\MessageTextController as text;
 
 class adminMessageController extends ApiController
 {
@@ -30,17 +31,21 @@ class adminMessageController extends ApiController
     * @DateTime 2018-01-24T15:11:00+0800
     * @return   [Array]                   Result success: true|false
     */
-   public function sendMessage()
+   public static function sendMessage($msg = null,$rec = 0,$title ='重大消息')
    {
-      if(!$message = request('content'))
+      if(!$message = $msg ?: request('content'))
          return err('not message');
 
 
-      if(! $messageId = $this->saveText())
+      if(! $messageId = text::saveMessageContent($message))
          return err('error');
 
-      $r = $this->model->create(['message_id'=>$messageId]);
-      return $this->resultReturn($r->id);
+      $rec  = request('rec') ?: $rec;
+
+
+
+      $r = AdminMessage::create(['message_id'=>$messageId,'rec'=>$rec,'title'=>$title]);
+      return self::resultReturn($r->id);
    }
 
 
@@ -57,15 +62,11 @@ class adminMessageController extends ApiController
     */
    public function userGetMessage($count = false)
    {
+
       if(! $id = userIsLogin())
          return err('not user log');
 
-
-      if($count){
-         $r = $this->joinMessageTable($id)->where('status',null)->count();
-      }else{
-         $r =  $this->joinMessageTable($id)->get();
-      }
+      $r = $this->model->with('message')->with('status')->where('rec','0')->orWhere('rec',$id)->orderBy('id','desc')->paginate(10);
 
 
       return $this->resultReturn($r);
@@ -83,7 +84,25 @@ class adminMessageController extends ApiController
     */
    public function getUnreadCount()
    {
-      return $this->userGetMessage(true);
+
+      if(! $id = userIsLogin())
+         return err('not user log');
+
+      $r = $this->model
+            ->select('admin_message_statuses.status','admin_messages.*')
+            ->leftJoin('admin_message_statuses',function($join)use($id){
+               $join->on('admin_messages.id','=','admin_message_statuses.admin_message_id')
+                     ->where('admin_message_statuses.user_id','=',$id);
+            })
+            ->where('admin_message_statuses.status',null)
+            ->where(function($query){
+              $query->where('rec',0)
+                    ->orWhere('rec',1);
+            })
+            ->count();
+
+
+      return $this->resultReturn($r);
    }
 
 
@@ -99,6 +118,7 @@ class adminMessageController extends ApiController
     */
    public function joinMessageTable($id)
    {
+
       return  $this->model
             ->select('admin_messages.*','messageText.content','admin_message_statuses.status')
             ->leftJoin('messageText','admin_messages.message_id','=','messageText.id')

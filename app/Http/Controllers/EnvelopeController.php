@@ -46,9 +46,9 @@ class envelopeController extends ApiController
    {
       $data =
       [
-         'send_id'=>session('user')->id,
+         'send_id'=>sessiony('user')->id,
          'user_id'=>request('recipient'),
-         'content'=>request('content'),
+         'content'=>request('msg'),
       ];
 
 
@@ -83,12 +83,15 @@ class envelopeController extends ApiController
 
 
       $r = $this->model
-            ->select('envelopes.*','messageText.content','users.username')
-            ->join('messageText','envelopes.message_id','=','messageText.id')
-            ->join('users','envelopes.send_id','=','users.id')
+            ->with('sendUser')
+            ->with('message')
+            // ->select('envelopes.*','messageText.content','users.username')
+            // ->join('messageText','envelopes.message_id','=','messageText.id')
+            // ->join('users','envelopes.send_id','=','users.id')
             ->where('status','<>','delete')
             ->where('user_id',$id)
-            ->get();
+            ->orderBy('id','desc')
+            ->paginate(10);
 
       return $this->resultReturn($r);
    }
@@ -110,13 +113,29 @@ class envelopeController extends ApiController
    }
 
 
+   /**
+    * The Method Is User Read Envelope change Status Api;
+    * @Yuan1998
+    * @DateTime 2018-02-03T12:45:14+0800
+    * @param    string                   $to [description]
+    * @return   [type]                       [description]
+    */
    public function envelopeRead($to = 'read')
    {
 
-      if(!$data = $this->changeStatusValidator())
-         return $this->getError();
+      if(!$id =userIsLogin())
+         return err('not user');
 
-      $r = $this->changeColumn($data['id'],'status',$to);
+      $eid = request('id');
+
+      $data = $this->model->find($eid);
+
+      if($data->user_id != $id)
+         return err('not you envelope');
+
+      $data->status= $to;
+
+      $r = $data->save();
 
       return $this->resultReturn($r);
 
@@ -136,5 +155,7 @@ class envelopeController extends ApiController
       return $this->validator($this->changeStatusRule,$data);
 
    }
+
+
 
 }

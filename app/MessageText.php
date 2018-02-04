@@ -11,5 +11,5 @@ class MessageText extends Model
 
     public $table = 'messageText';
 
-    public $fillable = ['content'];
+    public $fillable = ['content','rec'];
 }

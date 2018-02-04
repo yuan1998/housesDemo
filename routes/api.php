@@ -41,14 +41,14 @@ Route::group(['prefix'=>'user'],function(){
 
    Route::any('changeAvatar','UserController@changeUserAvatar')->middleware('Api:user');
 
-   Route::any('getUserList','UserController@getUserList')->middleware('Api:admin');
+   Route::any('getAllUser','UserController@getAllUser')->middleware('Api:admin');
 
 });
 
 
 Route::group(['prefix'=>'house'],function(){
 
-   Route::any('getStatusList','HouseController@getStatusList');
+   Route::any('status','HouseController@getStatusList');
 
    Route::any('read','HouseController@read');
 
@@ -60,6 +60,20 @@ Route::group(['prefix'=>'house'],function(){
 
    Route::any('addData','HouseController@add')->middleware('Api:user');
 
+   Route::any('getUserHouse','HouseController@getUserHouse')->middleware('Api:user');
+
+   Route::any('houseAuditPass','HouseController@houseAuditPass');
+
+   Route::any('addDataValidator','HouseController@isUserHouse')->middleware('Api:user');
+
+   Route::any('additional','HouseController@addData')->middleware('Api:user');
+
+   Route::any('getHotHouse','HouseController@getHotHouse');
+
+   Route::any('sellingHouseInfo','HouseController@sellingHouseInfo');
+
+
+// houseAuditPass
 });
 
 
@@ -77,15 +91,19 @@ Route::group(['prefix'=>'commissioned'],function(){
 
    Route::any('getPage','CommissionedController@getCurrentPage')->middleware('Api:user');
 
+   Route::any('getAll','CommissionedController@getAll')->middleware('Api:admin');
+
 });
 
 Route::group(['prefix'=>'envelope'],function(){
 
-   Route::any('getUserMessage','EnvelopeController@getUserMessage')->middleware('Api:user');
+   Route::any('getMessage','EnvelopeController@getUserMessage')->middleware('Api:user');
 
-   Route::any('read','EnvelopeController@envelopeRead')->middleware('Api:user');
+   Route::any('readStatus','EnvelopeController@envelopeRead')->middleware('Api:user');
 
    Route::any('getUnreadCount','EnvelopeController@getUnreadCount')->middleware('Api:user');
+
+   Route::any('send','EnvelopeController@sendMessage')->middleware('Api:user');
 
 });
 
@@ -99,11 +117,18 @@ Route::group(['prefix'=>'adminMessage'],function(){
 });
 
 Route::group(['prefix'=>'adminMessageStatus'],function(){
-   Route::any('userRead','adminMessageStatusController@userRead')->middleware('Api:user');
+
+   Route::any('readStatus','adminMessageStatusController@userRead')->middleware('Api:user');
+
 });
 
 Route::group(['prefix'=>'upload'],function(){
    Route::post('image','UploadController@image');
+});
+
+Route::group(['prefix'=>'img'], function(){
+   Route::get('/','imageController@imageFile');
+   Route::any('test','imageController@saveFile');
 });
 
 

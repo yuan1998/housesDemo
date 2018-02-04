@@ -12,12 +12,11 @@ class MessageTextController extends Controller
       $this->model = new MessageText;
    }
 
-   public function saveMessageContent()
+   public static function saveMessageContent($msg)
    {
-      if(!($content = request('content')))
-         return false;
 
-      $r = MessageText::create(['content'=>$content]);
+      $r = MessageText::create(['content'=>$msg]);
       return $r? $r->id : false;
+
    }
 }

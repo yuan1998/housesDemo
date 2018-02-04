@@ -25,4 +25,8 @@ class House extends Model
       return $this->hasOne('\App\Commissioned','id','commissioned_id');
    }
 
+   public function user(){
+      return $this->belongsTo('\App\User');
+   }
+
 }

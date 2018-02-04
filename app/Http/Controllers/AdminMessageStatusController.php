@@ -13,34 +13,29 @@ class AdminMessageStatusController extends ApiController
       $this->model = new AdminMessageStatus;
     }
 
+
+    /**
+     * The Methods is User read Message Create Log;
+     * @Yuan1998
+     * @DateTime 2018-02-03T12:38:55+0800
+     * @return   [type]                   [description]
+     */
     public function userRead()
     {
 
-      if(!$data = $this->userReadValidator())
-         return $this->getError();
+      if(!$id = userIsLogin())
+        return err();
 
-      // dd($data);
+      $aid = request('id');
 
-      $r = $this->model->create($data);
+      $c = $this->model->where('admin_message_id',$aid)->where('user_id',$id)->exists();
+
+      if($c)
+        return err('readed');
+
+      $r = $this->model->create(['admin_message_id'=>$aid,'user_id'=>$id]);
 
       return $this->resultReturn($r->id);
 
-    }
-
-    private function userReadValidator()
-    {
-      $rules =
-      [
-         'admin_message_id'=>'required|exists:admin_messages,id',
-         'user_id'=>'required|exists:users,id'
-      ];
-
-      $data =
-      [
-         'admin_message_id'=>request('id'),
-         'user_id'=>sessiony('user')->id,
-      ];
-
-      return $this->validator($rules,$data);
     }
 }

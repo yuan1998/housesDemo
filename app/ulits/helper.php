@@ -128,7 +128,7 @@ function generateLog()
 {
    // dd(get_class_methods(request()));
    $ip = getIp();
-   return ['log_time'=>date('Y-m-d H:i:s',time()),'ip'=>$ip];
+   return ['log_time'=>date('Y-m-d H:i:s',time()),'ip'=>$ip,'url'=>url()->current()];
 
 }
 

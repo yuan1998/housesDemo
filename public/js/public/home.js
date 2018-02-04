@@ -284,7 +284,7 @@ const store = new Vuex.Store({
             })
          },
          sendFile(){
-            $.post('/api/house/file',this.formData).then(res=>{
+            $.post('/api/img/test',this.formData).then(res=>{
                console.log(res);
             })
          },
@@ -303,7 +303,7 @@ const store = new Vuex.Store({
             if(!files.length)
                return ;
 
-            let a =this.img_to_base(files[0]);
+            let a = this.img_to_base(files[0]);
             console.log(a);
          },
          img_to_base(file){
@@ -311,12 +311,10 @@ const store = new Vuex.Store({
             let reader = new FileReader(),result;
 
             reader.onload = (e) =>{
-               result = e.target.result;
+               this.formData.file = e.target.result;
             }
 
             reader.readAsDataURL(file);
-
-            return result;
          }
       },
    };

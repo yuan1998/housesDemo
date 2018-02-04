@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Session;
+use Storage;
 
 
 use Validator;
@@ -34,15 +35,15 @@ class ApiController extends Controller
     public function remove()
     {
 
-    	$r = $this->model->where(request('id'))->delete();
+        $r = $this->model->where(request('id'))->delete();
 
-    	return $r ? suc() : err();
+        return $r ? suc() : err();
     }
 
 
     public function getCount()
     {
-    	return suc($this->model->count());
+        return suc($this->model->count());
     }
 
 
@@ -74,8 +75,8 @@ class ApiController extends Controller
 
     public function read()
     {
-    	$r = $this->model->get();
-    	return $r !== false? suc($r) : err('error');
+        $r = $this->model->get();
+        return $r !== false? suc($r) : err('error');
     }
 
     protected function filterData($data)
@@ -90,7 +91,7 @@ class ApiController extends Controller
         return $data;
     }
 
-    public function resultReturn($r,$type=null)
+    public static function resultReturn($r,$type=null)
     {
         return $r !== false ? suc($r) : err('error');
     }
@@ -133,6 +134,8 @@ class ApiController extends Controller
      * @param    String                   $imgstr  Base64 String
      * @return   [type]                           [description]
      */
+
+
     public function parseBase64($imgstr)
     {
 
@@ -142,15 +145,18 @@ class ApiController extends Controller
 
         $img= explode(",",$new_data[1])[1];
 
-        $path = base_path()."/public/storage/img/";
-
-        $fileName =   uniqid().time().'.' .$type;
+        $fileName =   self::createFileName($type);
 
         $data = base64_decode($img);
 
-        $r = file_put_contents($path.$fileName, $data);
+        $r = Storage::disk('public')->put($fileName,$data);
 
-        return $r ? ['name'=>$fileName,'type'=>$type,'size'=>$r] : false;
+        return $r ? ['name'=>$fileName,'type'=>$type,'size'=>$r,'url'=>url("/storage/$fileName"),'get'=>url("/api/img/?file=$fileName")] : false;
+    }
+
+    public static function createFileName($ext)
+    {
+      return date('Y-m-d-H-i-s') .'-'. rand(1010,2020). uniqid() .'.'. $ext;
     }
 
 
@@ -185,9 +191,9 @@ class ApiController extends Controller
      */
     public function removeFile($name)
     {
-        $path = base_path()."/public/storage/img/";
 
-        return unlink($path.$name);
+        return Storage::disk('public')->delete($name);
+
     }
 
 }

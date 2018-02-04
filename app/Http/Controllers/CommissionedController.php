@@ -63,7 +63,7 @@ class CommissionedController extends ApiController
       if(! $id = userIsLogin())
          return err('not user log');
 
-      $r = $this->model->where('user_id',$id)->orderBy('id', 'desc')->get();
+      $r = $this->model->where('user_id',$id)->orderBy('id', 'desc')->paginate(3);
 
       return suc($r);
 
@@ -83,7 +83,11 @@ class CommissionedController extends ApiController
 
    public function getCurrentPage()
    {
-      $r = $this->model->orderBy('id','desc')->where('status','<>','off')->paginate(5);
+
+      if(! $id = userIsLogin())
+         return err('not user log');
+
+      $r = $this->model->orderBy('id','desc')->where('user_id',$id)->where('status','<>','off')->paginate(5);
       return $this->resultReturn($r);
    }
 
@@ -94,6 +98,15 @@ class CommissionedController extends ApiController
          return err();
 
       return $this->resultReturn(ceil($r/5));
+   }
+
+   public function getAll()
+   {
+
+      $r = $this->model->orderBy('id','desc')->paginate(5);
+
+      return $this->resultReturn($r);
+
    }
 
 

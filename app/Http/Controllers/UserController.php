@@ -275,7 +275,34 @@ class UserController extends ApiController
       $r = $user->save();
 
 
+      return $r ? suc($newFile) : err();
+   }
+
+   /**
+    * The Function is get All User Api
+    * @Yuan1998
+    * @DateTime 2018-02-02T15:47:29+0800
+    * @return   [type]                   [description]
+    */
+   public function getAllUser()
+   {
+      $r = $this->model->paginate(10);
       return $this->resultReturn($r);
    }
 
+   /**
+    * The Function in The Condition Find  User.
+    * @Yuan1998
+    * @DateTime 2018-02-02T15:52:00+0800
+    */
+   public function FindAllUser()
+   {
+      $condi = request('condi');
+
+      $this->model->where('id',$cond)->orWhere('username',$condi);
+
+      $r =$this->getAllUser();
+
+      return $this->resultReturn($r);
+   }
 }
