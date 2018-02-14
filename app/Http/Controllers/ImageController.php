@@ -8,7 +8,7 @@ use Response;
 use Storage;
 
 
-class ImageController extends Controller
+class ImageController extends ApiController
 {
 
     public function imageFile()
@@ -29,22 +29,25 @@ class ImageController extends Controller
     public function saveFile()
     {
 
+      $str = request('file');
 
-      $imgstr = request('file');
+      $r = $this->parseBase64($str);
 
-      $new_data=explode(";",$imgstr);
+      return $this->resultReturn($r);
 
-      $type= explode("/",$new_data[0])[1];
-
-      $img= explode(",",$new_data[1])[1];
-
-      $name = self::createFileName($type);
-
-      $data = base64_decode($img);
-
-       $r =Storage::disk('public')->put($name,$data);
-       return [$r];
     }
+
+    public function removeImage()
+    {
+
+      $fileName = request('file');
+
+      $r = $this->removeFile($fileName);
+
+      return $this->resultReturn($r);
+
+    }
+
 
     public static function createFileName($ext)
     {

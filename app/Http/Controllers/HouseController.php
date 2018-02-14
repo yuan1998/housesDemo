@@ -61,7 +61,8 @@ class HouseController extends ApiController
         'tel'=>'required',
         'expect_price'=>'required',
         'city'=>'required',
-        'location'=>'required'
+        'location'=>'required',
+        'location_info'=>'required'
     ];
 
     /**
@@ -91,11 +92,12 @@ class HouseController extends ApiController
 
         $data['user_id'] = $id;
 
-        $this->saveImage($data);
-
         $r = $this->model->create($data);
 
-        return $this->resultReturn($r);
+        if($r)
+            $this->houseAuditPass($r->id);
+
+        return $this->resultReturn($r->id);
 
     }
 
@@ -208,18 +210,7 @@ class HouseController extends ApiController
         return $result !== false ? suc($result) : err('error');
     }
 
-    /**
-     * The Method Is Get Status is Sell Houses
-     *
-     * @Yuan1998
-     * @DateTime 2018-02-02T22:48:47+0800
-     * @return   [type]                   [description]
-     */
-    public function getSellingHouses()
-    {
-        $r = $this->mainSearch();
-        return $r !== false ? suc($r) : err('error');
-    }
+
 
     /**
      * The Method is Validate Keyword
@@ -261,7 +252,7 @@ class HouseController extends ApiController
         if(!$id = userIsLogin())
             return err('user is not Login');
 
-        $r = $this->model->where('user_id',$id)->orderBy('id','desc')->paginate(5);
+        $r = $this->model->where('user_id',$id)->orderBy('id','desc')->paginate(6);
 
         return $this->resultReturn($r);
     }
@@ -273,9 +264,9 @@ class HouseController extends ApiController
      * @DateTime 2018-02-03T14:36:01+0800
      * @return   [type]                   [description]
      */
-    public function houseAuditPass()
+    public function houseAuditPass($hid = null)
     {
-        if(! $hId = request('hid'))
+        if(! $hId = $hid ?: request('hid') )
             return err('house_id error');
 
         $hD = $this->model->find($hId);
@@ -295,7 +286,7 @@ class HouseController extends ApiController
 
         $passMessage= "您的房子已经通过审核，请尽快补充资料和价格，我们将会为你上架。<br><a class='am-link' href='#/yezhu/addData/{$hId}'>去补充资料！</a>";
 
-        $r = admin::sendMessage($this->passMessage,$hD->user_id,$title);
+        $r = admin::sendMessage($passMessage,$title,$hD->user_id);
 
 
         return $r? suc() :err('send Message Error');
@@ -394,6 +385,7 @@ class HouseController extends ApiController
             'sub_title'=>request('sub_title'),
             'product_info'=>request('product_info'),
             'price'=>request('price'),
+            'tags'=>request('tags')
         ];
 
 
@@ -413,6 +405,209 @@ class HouseController extends ApiController
 
         return $this->resultReturn($r);
     }
+
+
+    /**
+     * The Method is Get All Audit House Count.
+     * @Yuan1998
+     * @DateTime 2018-02-06T22:01:54+0800
+     * @return   [type]                   [description]
+     */
+    public function getAuditCount()
+    {
+        $r = $this->model->where('status','audit')->count();
+
+        return $this->resultReturn($r);
+    }
+
+    /**
+     * The Method Is Get All Selling House Count ;
+     * @Yuan1998
+     * @DateTime 2018-02-06T22:03:09+0800
+     * @return   [type]                   [description]
+     */
+    public function getSellingCount()
+    {
+        $r = $this->model->where('status','sell')->count();
+
+        return $this->resultReturn($r);
+    }
+
+
+    /**
+     * The Method is Get status is Audit houses on the page
+     * @Yuan1998
+     * @DateTime 2018-02-06T22:07:19+0800
+     * @return   [type]                   [description]
+     */
+    public function getAuditHouse()
+
+    {
+        $r = $this->model->where('status','audit')->paginate(6);
+
+        return $this->resultReturn($r);
+    }
+
+
+    /**
+     * The Method Is Get Status is Sell Houses
+     *
+     * @Yuan1998
+     * @DateTime 2018-02-02T22:48:47+0800
+     * @return   [type]                   [description]
+     */
+    public function getSellHouse()
+    {
+        $r =$this->model->where('status','sell')->paginate(6);
+        return $this->resultReturn($r);
+    }
+
+    /**
+     * The Method is Get 6 houses.
+     *
+     * @Yuan1998
+     * @DateTime 2018-02-08T13:08:02+0800
+     * @return   [type]                   [description]
+     */
+    public function getAllHouse()
+    {
+
+        $r = $this->model->paginate(6);
+
+        return $this->resultReturn($r);
+
+    }
+
+    /**
+     * The method is admin get house info api.
+     * @Yuan1998
+     * @DateTime 2018-02-07T16:13:02+0800
+     * @return   [type]                   [description]
+     */
+    public function getHouseInfo()
+    {
+        $id = request('id');
+        $r = $this->model->find($id);
+        return $this->resultReturn($r);
+    }
+
+
+    /**
+     * The Method is Admin Chnage House Data Api.
+     * @Yuan1998
+     * @DateTime 2018-02-07T22:53:27+0800
+     * @return   [type]                   [description]
+     */
+    public function houseEdit()
+    {
+        $data = request()->toArray();
+        $id = $data['id'];
+        $house = $this->model->find($id);
+        if(in_array('location_info',$data))
+            $data['location_info'] = $data['location_info'] ?: [];
+        $r = $house->fill($data)->save();
+        return $this->resultReturn($r);
+    }
+
+    /**
+     * The Method is close House Api.
+     * @Yuan1998
+     * @DateTime 2018-02-07T23:07:58+0800
+     * @return   [type]                   [description]
+     */
+    public function closeHouse()
+    {
+        $id = request('id');
+        $house =$this->model->find($id);
+        $house->status = 'close';
+        $r = $house->save();
+        return $this->resultReturn($r);
+
+    }
+
+
+    /**
+     * The Method is Admin add House.
+     *
+     * @Yuan1998
+     * @DateTime 2018-02-08T13:48:44+0800
+     */
+    public function addHouse()
+    {
+        $data = request()->toArray();
+        $r = $this->model->create($data);
+        return $this->resultReturn($r);
+    }
+
+
+    /**
+     * 根据经纬度获取附近10000米在售的房子
+     * @Yuan1998
+     * @DateTime 2018-02-09T14:24:57+0800
+     * @return   Array                   结果数组
+     */
+    public function getLngLat()
+    {
+
+
+        $lng = request('lng');
+        $lat = request('lat');
+
+        $squares = $this->calcScope($lat, $lng, 16000);
+
+        $r = $this->model
+            // ->where(function($query)use( $scope){
+            //     $query
+                ->where('location_info->lng','<',(String) $squares['maxLng'])
+                ->where('location_info->lat','<',(String) $squares['maxLat'])
+                ->where('location_info->lng','>',(String) $squares['minLng'])
+                ->where('location_info->lat','>',(String) $squares['minLat'])
+                ->where('status','sell')
+                ->paginate(18);
+                      // ->where('location_info->lng','>', $squares['left-top']['lng'])
+            // })
+            // ->where(function($query)use ($lat){
+            //     $query->where('location_info->lat','<',$lat+0.1)
+            //           ->where('location_info->lat','>',$lat-0.1);
+            // })
+
+        return $this->resultReturn($r);
+
+    }
+
+        /**
+     * 根据经纬度和半径计算出范围
+     * @param string $lat 经度
+     * @param String $lng 纬度
+     * @param float $radius 半径
+     * @return Array 范围数组
+     */
+    private function calcScope($lat, $lng, $radius) {
+        define('PI',3.14159265359);
+
+        $degree = (24901*1609)/360.0;
+        $dpmLat = 1/$degree;
+
+        $radiusLat = $dpmLat*$radius;
+        $minLat = $lat - $radiusLat;       // 最小经度
+        $maxLat = $lat + $radiusLat;       // 最大经度
+
+        $mpdLng = $degree*cos($lat * (PI/180));
+        $dpmLng = 1 / $mpdLng;
+        $radiusLng = $dpmLng*$radius;
+        $minLng = $lng - $radiusLng;      // 最小纬度
+        $maxLng = $lng + $radiusLng;      // 最大纬度
+
+        /** 返回范围数组 */
+        $scope = array(
+            'minLat'    =>  $minLat,
+            'maxLat'    =>  $maxLat,
+            'minLng'    =>  $minLng,
+            'maxLng'    =>  $maxLng
+            );
+        return $scope;
+    }
+
 
 
 }

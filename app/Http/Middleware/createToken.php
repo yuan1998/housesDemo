@@ -30,7 +30,7 @@ class createToken
 
         }else $SY->findSession();
 
-        $SY->addLog();
+        // $SY->addLog();
 
         return $next($request);
     }

@@ -43,6 +43,13 @@ Route::group(['prefix'=>'user'],function(){
 
    Route::any('getAllUser','UserController@getAllUser')->middleware('Api:admin');
 
+   Route::any('isAdmin','UserController@isAdmin')->middleware('Api:admin');
+
+   Route::any('getUserCount','UserController@getUserCount')->middleware('Api:admin');
+   Route::any('getUserInfo','UserController@getUserInfo')->middleware('Api:admin');
+   Route::any('changeUserData','UserController@changeUserData')->middleware('Api:admin');
+   Route::any('createUser','UserController@createUser')->middleware('Api:admin');
+
 });
 
 
@@ -52,7 +59,6 @@ Route::group(['prefix'=>'house'],function(){
 
    Route::any('read','HouseController@read');
 
-   Route::any('getSellingHouses','HouseController@getSellingHouses');
 
    Route::any('searchTitle','HouseController@searchTitle');
 
@@ -72,8 +78,26 @@ Route::group(['prefix'=>'house'],function(){
 
    Route::any('sellingHouseInfo','HouseController@sellingHouseInfo');
 
+   Route::any('getAuditCount','HouseController@getAuditCount')->middleware('Api:admin');
 
-// houseAuditPass
+   Route::any('getSellingCount','HouseController@getSellingCount')->middleware('Api:admin');
+
+   Route::any('sellHouse','HouseController@getSellHouse')->middleware('Api:user');
+
+   Route::any('allHouse','HouseController@getAllHouse')->middleware('Api:admin');
+
+   Route::any('auditHouse','HouseController@getAuditHouse')->middleware('Api:admin');
+
+   Route::any('getHouseInfo','HouseController@getHouseInfo')->middleware('Api:admin');
+
+   Route::any('houseEdit','HouseController@houseEdit')->middleware('Api:admin');
+
+   Route::any('closeHouse','HouseController@closeHouse')->middleware('Api:admin');
+
+   Route::any('addHouse','HouseController@addHouse')->middleware('Api:admin');
+
+   Route::any('getLngLat','HouseController@getLngLat');
+
 });
 
 
@@ -92,6 +116,7 @@ Route::group(['prefix'=>'commissioned'],function(){
    Route::any('getPage','CommissionedController@getCurrentPage')->middleware('Api:user');
 
    Route::any('getAll','CommissionedController@getAll')->middleware('Api:admin');
+
 
 });
 
@@ -113,6 +138,10 @@ Route::group(['prefix'=>'adminMessage'],function(){
 
    Route::any('getUnreadCount','adminMessageController@getUnreadCount')->middleware('Api:user');
 
+   Route::any('send','adminMessageController@send')->middleware('Api:admin');
+
+   Route::any('unreadTitle','adminMessageController@getUnreadMessageTitle')->middleware('Api:user');
+
 
 });
 
@@ -128,7 +157,17 @@ Route::group(['prefix'=>'upload'],function(){
 
 Route::group(['prefix'=>'img'], function(){
    Route::get('/','imageController@imageFile');
-   Route::any('test','imageController@saveFile');
+
+   Route::any('save','imageController@saveFile');
+
+   Route::any('remove','imageController@removeImage');
+});
+
+Route::group(['prefix'=>'reservation'], function(){
+
+   Route::any('create','reservationController@newReservation')->middleware('Api:user');
+   Route::any('check','reservationController@checkIsReservation')->middleware('Api:user');
+
 });
 
 

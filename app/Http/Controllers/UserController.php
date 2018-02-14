@@ -305,4 +305,74 @@ class UserController extends ApiController
 
       return $this->resultReturn($r);
    }
+
+
+   /**
+    * The Method is Validate Login User is the Admin. Middleware on validated.so pass return true;
+    * @Yuan1998
+    * @DateTime 2018-02-06T21:58:22+0800
+    * @return   boolean                  [description]
+    */
+   public function isAdmin(){
+      return suc();
+   }
+
+   /**
+    * The Method Is Get All User Count . Admin Api.
+    * @Yuan1998
+    * @DateTime 2018-02-06T22:00:18+0800
+    * @return   [type]                   [description]
+    */
+   public function getUserCount(){
+      $r = $this->model->count();
+      return $this->resultReturn($r);
+   }
+
+    /**
+     * The Method is get param id user info , admin Api
+     * @Yuan1998
+     * @DateTime 2018-02-07T14:58:38+0800
+     * @return   [type]                   [description]
+     */
+   public function getUserInfo()
+   {
+      $id = request('id');
+
+      $r = $this->model->where('id',$id)->first();
+      return $this->resultReturn($r);
+   }
+
+   /**
+    * The method is admin chnage user info APi.
+    * @Yuan1998
+    * @DateTime 2018-02-07T15:17:54+0800
+    * @return   [type]                   [description]
+    */
+   public function changeUserData()
+   {
+      $data = request()->all(['permission','email','tel','username']);
+      $id = request()->id;
+      $user =  $this->model->find($id);
+
+       $r =$user->fill($data)->save();
+      return $this->resultReturn($r);
+   }
+
+
+   /**
+    * The method is admin create user api.
+    * @Yuan1998
+    * @DateTime 2018-02-07T15:34:58+0800
+    * @return   [type]                   [description]
+    */
+   public function createUser()
+   {
+      $data = request()->toArray();
+
+      $data['password'] = Hash::make($data['password']);
+
+      $r = $this->model->create($data);
+
+      return $this->resultReturn($r);
+   }
 }

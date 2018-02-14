@@ -16,7 +16,7 @@ class ChangeHousesAddHotNewLocationInfo extends Migration
         Schema::table('houses', function (Blueprint $table) {
             $table->boolean('hot')->default(0)->comment('hot');
             $table->boolean('new')->default(0)->comment('new');
-            $table->json('location_info')->default(0)->comment('location_info');
+            $table->json('location_info')->comment('location_info');
         });
     }
 
@@ -28,7 +28,9 @@ class ChangeHousesAddHotNewLocationInfo extends Migration
     public function down()
     {
         Schema::table('houses', function (Blueprint $table) {
-            //
+            $table->dropColumn('hot');
+            $table->dropColumn('new');
+            $table->dropColumn('location_info');
         });
     }
 }

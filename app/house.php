@@ -17,7 +17,8 @@ class House extends Model
       'huxing_map_info'=>'json',
       'house_img'=>'json',
       'room_count'=>'json',
-      'deed_info'=>'json'
+      'deed_info'=>'json',
+      'location_info'=>'json'
    ];
 
    public function hasCommissioned()

@@ -145,7 +145,7 @@ class ApiController extends Controller
 
         $img= explode(",",$new_data[1])[1];
 
-        $fileName =   self::createFileName($type);
+        $fileName = self::createFileName($type);
 
         $data = base64_decode($img);
 
