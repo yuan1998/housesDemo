@@ -18,7 +18,7 @@ class createToken
 
         $SY = newSession();
 
-        $session_name = 's_token';
+        $session_name = 'STOKEN';
 
         $token = $request->get($session_name) ?: $request->header($session_name);
 
