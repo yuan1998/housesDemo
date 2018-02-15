@@ -134,20 +134,20 @@ Route::group(['prefix'=>'envelope'],function(){
 
 Route::group(['prefix'=>'adminMessage'],function(){
 
-   Route::any('userGetMessage','adminMessageController@userGetMessage')->middleware('Api:user');
+   Route::any('userGetMessage','AdminMessageController@userGetMessage')->middleware('Api:user');
 
-   Route::any('getUnreadCount','adminMessageController@getUnreadCount')->middleware('Api:user');
+   Route::any('getUnreadCount','AdminMessageController@getUnreadCount')->middleware('Api:user');
 
-   Route::any('send','adminMessageController@send')->middleware('Api:admin');
+   Route::any('send','AdminMessageController@send')->middleware('Api:admin');
 
-   Route::any('unreadTitle','adminMessageController@getUnreadMessageTitle')->middleware('Api:user');
+   Route::any('unreadTitle','AdminMessageController@getUnreadMessageTitle')->middleware('Api:user');
 
 
 });
 
 Route::group(['prefix'=>'adminMessageStatus'],function(){
 
-   Route::any('readStatus','adminMessageStatusController@userRead')->middleware('Api:user');
+   Route::any('readStatus','AdminMessageStatusController@userRead')->middleware('Api:user');
 
 });
 
@@ -156,17 +156,17 @@ Route::group(['prefix'=>'upload'],function(){
 });
 
 Route::group(['prefix'=>'img'], function(){
-   Route::get('/','imageController@imageFile');
+   Route::get('/','ImageController@imageFile');
 
-   Route::any('save','imageController@saveFile');
+   Route::any('save','ImageController@saveFile');
 
-   Route::any('remove','imageController@removeImage');
+   Route::any('remove','ImageController@removeImage');
 });
 
 Route::group(['prefix'=>'reservation'], function(){
 
-   Route::any('create','reservationController@newReservation')->middleware('Api:user');
-   Route::any('check','reservationController@checkIsReservation')->middleware('Api:user');
+   Route::any('create','ReservationController@newReservation')->middleware('Api:user');
+   Route::any('check','ReservationController@checkIsReservation')->middleware('Api:user');
 
 });
 
