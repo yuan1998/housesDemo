@@ -139,7 +139,7 @@ class ApiController extends Controller
     public function parseBase64($imgstr)
     {
 
-        $new_data=explode(";",$imgstr);
+        $new_data = explode(";",$imgstr);
 
         $type= explode("/",$new_data[0])[1];
 

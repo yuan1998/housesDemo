@@ -261,21 +261,12 @@ class UserController extends ApiController
       if(!$file = request('file'))
         return err('not File');
 
-      $newFile = $this->parseBase64($file);
 
-      if(!$newFile)
-        return err('upload Err');
-
-      $name = @sessiony('user')->avatar_url['name'];
-
-      if($name)
-        $this->removeFile($name);
-
-      $user->avatar_url = $newFile;
+      $user->avatar_url = $file;
       $r = $user->save();
 
 
-      return $r ? suc($newFile) : err();
+      return $r ? suc($file) : err();
    }
 
    /**
