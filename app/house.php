@@ -30,4 +30,8 @@ class House extends Model
       return $this->belongsTo('\App\User');
    }
 
+   public function hasReservation(){
+      return $this->hasMany('\App\Reservation','reservation_house_id','id');
+   }
+
 }

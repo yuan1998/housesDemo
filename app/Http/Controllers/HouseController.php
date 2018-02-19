@@ -30,6 +30,10 @@ class HouseController extends ApiController
      */
 
 
+    public $Pi = 3.14159265359;
+
+
+    public $oPi = (3.14159265359/180);
 
     /**
      * The Arrtribute Is Creating Validate Rule
@@ -339,7 +343,14 @@ class HouseController extends ApiController
 
         $hid = request('id');
 
-        $r = $this->model->with('user')->where('id',$hid)->where('status','sell')->first();
+        $r = $this->model
+                ->with('user')
+                ->with(['hasReservation'=>function($q){
+                    $q->where('date','>',(time() - day())*1000);
+                }])
+                ->where('id',$hid)
+                ->where('status','sell')
+                ->first();
 
         return $this->resultReturn($r);
 
@@ -550,26 +561,25 @@ class HouseController extends ApiController
     {
 
 
+
         $lng = request('lng');
         $lat = request('lat');
 
-        $squares = $this->calcScope($lat, $lng, 16000);
+        $squares = $this->calcScope($lat, $lng, 36000);
+
 
         $r = $this->model
-            // ->where(function($query)use( $scope){
-            //     $query
-                ->where('location_info->lng','<',(String) $squares['maxLng'])
-                ->where('location_info->lat','<',(String) $squares['maxLat'])
-                ->where('location_info->lng','>',(String) $squares['minLng'])
-                ->where('location_info->lat','>',(String) $squares['minLat'])
+                ->select(
+                    '*',
+                    DB::raw("round(6378.138*2*asin(sqrt(pow(sin(
+($lat*pi()/180-JSON_EXTRACT(location_info, '$.lat')*pi()/180)/2),2)+cos($lat*pi()/180)*cos(JSON_EXTRACT(location_info, '$.lat')*pi()/180)*
+pow(sin( ($lng*pi()/180-JSON_EXTRACT(location_info, '$.lng')*pi()/180)/2),2)))*1000) as distance")
+                )
+                ->whereBetween('location_info->lng',[$squares['minLng'],$squares['maxLng']])
+                ->whereBetween('location_info->lat',[$squares['minLat'],$squares['maxLat']])
                 ->where('status','sell')
+                ->orderBy('distance','asc')
                 ->paginate(18);
-                      // ->where('location_info->lng','>', $squares['left-top']['lng'])
-            // })
-            // ->where(function($query)use ($lat){
-            //     $query->where('location_info->lat','<',$lat+0.1)
-            //           ->where('location_info->lat','>',$lat-0.1);
-            // })
 
         return $this->resultReturn($r);
 
@@ -583,7 +593,7 @@ class HouseController extends ApiController
      * @return Array 范围数组
      */
     private function calcScope($lat, $lng, $radius) {
-        define('PI',3.14159265359);
+
 
         $degree = (24901*1609)/360.0;
         $dpmLat = 1/$degree;
@@ -592,7 +602,7 @@ class HouseController extends ApiController
         $minLat = $lat - $radiusLat;       // 最小经度
         $maxLat = $lat + $radiusLat;       // 最大经度
 
-        $mpdLng = $degree*cos($lat * (PI/180));
+        $mpdLng = $degree*cos($lat * ($this->oPi));
         $dpmLng = 1 / $mpdLng;
         $radiusLng = $dpmLng*$radius;
         $minLng = $lng - $radiusLng;      // 最小纬度

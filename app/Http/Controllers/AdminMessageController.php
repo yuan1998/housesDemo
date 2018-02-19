@@ -76,10 +76,17 @@ class adminMessageController extends ApiController
    public function userGetMessage()
    {
 
-      if(! $id = userIsLogin())
-         return err('not user log');
+        if(! $id = userIsLogin())
+            return err('not user log');
 
-      $r = $this->model->with('message')->with('status')->where('rec','0')->orWhere('rec',$id)->orderBy('id','desc')->paginate(10);
+        $time = sessiony('user')->created_at;
+
+        $r = $this->model->with('message')
+            ->with('status')
+            ->whereIn('rec',[0,$id])
+            ->whereDate('created_at','>',$time)
+            ->orderBy('id','desc')
+            ->paginate(10);
 
 
       return $this->resultReturn($r);
@@ -98,17 +105,16 @@ class adminMessageController extends ApiController
         if(! $id = userIsLogin())
             return err('not user log');
 
+        $time = sessiony('user')->created_at;
+
         $r = $this->model
             ->select('admin_messages.title')
             ->leftJoin('admin_message_statuses',function($join)use($id){
                 $join->on('admin_messages.id','=','admin_message_statuses.admin_message_id')
                         ->where('admin_message_statuses.user_id','=',$id);
             })
-            ->where('admin_message_statuses.status',null)
-            ->where(function($query)use($id){
-                $query->where('rec',0)
-                    ->orWhere('rec',$id);
-            })
+            ->whereNull('admin_message_statuses.status')
+            ->whereIn('rec',[0,$id])
             ->paginate(5);
 
         return $this->resultReturn($r);
@@ -129,17 +135,21 @@ class adminMessageController extends ApiController
         if(! $id = userIsLogin())
             return err('not user log');
 
+        $time = sessiony('user')->created_at;
+
         $r = $this->model
                 ->select('admin_message_statuses.status','admin_messages.*')
                 ->leftJoin('admin_message_statuses',function($join)use($id){
                     $join->on('admin_messages.id','=','admin_message_statuses.admin_message_id')
                         ->where('admin_message_statuses.user_id','=',$id);
                 })
-                ->where('admin_message_statuses.status',null)
-                ->where(function($query)use($id){
-                    $query->where('rec',0)
-                        ->orWhere('rec',$id);
-                })
+                ->whereNull('admin_message_statuses.status')
+                // ->where(function($query)use($id){
+                //     $query->where('rec',0)
+                //         ->orWhere('rec',$id);
+                // })
+                ->whereIn('rec',[0,$id])
+                ->whereDate('admin_messages.created_at','>',$time)
                 ->count();
 
 
@@ -164,7 +174,7 @@ class adminMessageController extends ApiController
                 ->select('admin_messages.*','messageText.content','admin_message_statuses.status')
                 ->leftJoin('messageText','admin_messages.message_id','=','messageText.id')
                 ->leftJoin('admin_message_statuses',function($join)use($id){
-                $join->on('admin_messages.id','=','admin_message_statuses.admin_message_id')
+                    $join->on('admin_messages.id','=','admin_message_statuses.admin_message_id')
                         ->where('admin_message_statuses.user_id','=',$id)
                         ->where('admin_message_statuses.status','<>','delete');
                 });

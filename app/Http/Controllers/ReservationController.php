@@ -34,7 +34,6 @@ class ReservationController extends ApiController
 
         $r = $this->model->create(['date'=>$date,'reservation_id'=>$id,'reservation_house_id'=>$hid,'status'=>$status]);
 
-
         return $this->resultReturn($r->id);
     }
 
@@ -50,7 +49,12 @@ class ReservationController extends ApiController
         $id = sessiony('user')->id;
         $hid = request('hid');
 
-        $r = $this->model->where('reservation_id',$id)->where('reservation_house_id',$hid)->where('status','unStart')->first();
+        $r = $this->model
+            ->where('reservation_id',$id)
+            ->where('reservation_house_id',$hid)
+            ->where('status','unStart')
+            ->where('date','>',(time() - day())*1000)
+            ->first();
 
         return $this->resultReturn($r);
     }
