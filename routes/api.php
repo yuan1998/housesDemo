@@ -98,6 +98,8 @@ Route::group(['prefix'=>'house'],function(){
 
    Route::any('getLngLat','HouseController@getLngLat');
 
+   Route::any('clone','HouseController@copyHouse');
+
 });
 
 

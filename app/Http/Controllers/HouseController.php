@@ -565,8 +565,14 @@ class HouseController extends ApiController
         $lng = request('lng');
         $lat = request('lat');
 
-        $squares = $this->calcScope($lat, $lng, 36000);
+        $bounds = request('bounds');
 
+        if(!$bounds){
+            $bounds = $this->calcScope($lat,$lng,25000);
+        }
+
+        $max = $bounds['max'];
+        $min = $bounds['min'];
 
         $r = $this->model
                 ->select(
@@ -575,10 +581,11 @@ class HouseController extends ApiController
 ($lat*pi()/180-JSON_EXTRACT(location_info, '$.lat')*pi()/180)/2),2)+cos($lat*pi()/180)*cos(JSON_EXTRACT(location_info, '$.lat')*pi()/180)*
 pow(sin( ($lng*pi()/180-JSON_EXTRACT(location_info, '$.lng')*pi()/180)/2),2)))*1000) as distance")
                 )
-                ->whereBetween('location_info->lng',[$squares['minLng'],$squares['maxLng']])
-                ->whereBetween('location_info->lat',[$squares['minLat'],$squares['maxLat']])
+                ->whereBetween('location_info->lng',[floatval($min['lng']),floatval($max['lng'])])
+                ->whereBetween('location_info->lat',[floatval($min['lat']),floatval($max['lat'])])
                 ->where('status','sell')
-                ->orderBy('distance','asc')
+                // ->orderBy('distance','asc')
+                // ->inRandomOrder()  // Rand result
                 ->paginate(18);
 
         return $this->resultReturn($r);
@@ -609,13 +616,46 @@ pow(sin( ($lng*pi()/180-JSON_EXTRACT(location_info, '$.lng')*pi()/180)/2),2)))*1
         $maxLng = $lng + $radiusLng;      // 最大纬度
 
         /** 返回范围数组 */
-        $scope = array(
-            'minLat'    =>  $minLat,
-            'maxLat'    =>  $maxLat,
-            'minLng'    =>  $minLng,
-            'maxLng'    =>  $maxLng
-            );
-        return $scope;
+
+
+        return [
+            'max'=>['lng'=>$maxLng,'lat'=>$maxLat],
+            'min'=>['lng'=>$minLng,'lat'=>$minLat],
+        ];
+    }
+
+    /**
+     * 复制数据
+     * @Yuan1998
+     * @DateTime 2018-02-20T17:25:01+0800
+     * @return   [type]                   [description]
+     */
+    public function copyHouse()
+    {
+        $id = request('id');
+        $count = request('count') ?: 1;
+
+        $arr = [];
+        for($i = 0;$i<$count;$i++){
+            $clone = $this->model->find($id)->replicate();
+            $location =$clone->location_info;
+
+            $lng = request('lng') ?: $location['lng'];
+            $lat = request('lat') ?: $location['lat'];
+
+            $location['lng'] = $lng + ((mt_rand() / mt_getrandmax()) - 0.5) * 0.19;
+            $location['lat'] = $lat + ((mt_rand() / mt_getrandmax()) - 0.5) * 0.19;
+            $clone->location_info = $location;
+            array_push($arr,$clone->save());
+        }
+
+
+
+        // dd();
+
+// [121.5273285 + , 31.21515044 + (Math.random() - 0.5) * 0.02]
+        return $arr;
+
     }
 
 
