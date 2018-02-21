@@ -736,7 +736,6 @@ pow(sin( ($lng*pi()/180-JSON_EXTRACT(location_info, '$.lng')*pi()/180)/2),2)))*1
         $covers = [
             'cover_1.jpg',
             'PH_case-study-perpetuum-smart-home.jpg',
-            'Vantage Rotator.jpg',
             'MaxHan.jpg',
             'home-design-contemporary2.jpg',
             'slide3.jpg',
