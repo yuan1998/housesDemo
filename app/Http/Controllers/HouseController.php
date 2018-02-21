@@ -565,6 +565,8 @@ class HouseController extends ApiController
         $lng = request('lng');
         $lat = request('lat');
 
+        $rand = request('rand');
+
         $bounds = request('bounds');
 
         if(!$bounds){
@@ -586,6 +588,7 @@ pow(sin( ($lng*pi()/180-JSON_EXTRACT(location_info, '$.lng')*pi()/180)/2),2)))*1
                 ->where('status','sell')
                 // ->orderBy('distance','asc')
                 // ->inRandomOrder()  // Rand result
+                ->orderBy(DB::raw("RAND($rand)"))
                 ->paginate(18);
 
         return $this->resultReturn($r);
