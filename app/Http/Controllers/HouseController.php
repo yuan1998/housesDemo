@@ -412,7 +412,7 @@ class HouseController extends ApiController
      */
     public function getHotHouse()
     {
-        $r = $this->model->where('status','sell')->paginate(6);
+        $r = $this->model->where('status','sell')->inRandomOrder()->paginate(6);
 
         return $this->resultReturn($r);
     }

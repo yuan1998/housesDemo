@@ -50,6 +50,8 @@ Route::group(['prefix'=>'user'],function(){
    Route::any('changeUserData','UserController@changeUserData')->middleware('Api:admin');
    Route::any('createUser','UserController@createUser')->middleware('Api:admin');
 
+   Route::any('change','UserController@change')->middleware('Api:user');
+
 });
 
 

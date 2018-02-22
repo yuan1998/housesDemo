@@ -366,4 +366,21 @@ class UserController extends ApiController
 
       return $this->resultReturn($r);
    }
+
+
+   /**
+    * The Methods is User change Data
+    * @Yuan1998
+    * @DateTime 2018-02-22T16:44:36+0800
+    * @return   [type]                   [description]
+    */
+   public function change()
+   {
+      $data = request()->toArray();
+
+      $r = $this->model->find($data['id'])->fill($data)->save();
+
+      return $this->resultReturn($r);
+
+   }
 }
